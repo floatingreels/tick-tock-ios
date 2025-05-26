@@ -7,12 +7,26 @@
 
 import SwiftUI
 
-struct BaseView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+struct BaseView<Content>: View where Content: View {
+    
+    @StateObject private var coordinator = Coordinator()
+    
+    private let bgColor = Color.backgroundPrimary
+    private let content: Content
 
-#Preview {
-    BaseView()
+    public init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body : some View {
+        NavigationStack(path: $coordinator.path) {
+            ZStack {
+                bgColor
+                content
+            }
+        }
+        .navigationDestination(for: String.self) { screen in
+            screen
+        }
+    }
 }

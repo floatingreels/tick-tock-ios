@@ -7,9 +7,207 @@
 
 import SwiftUI
 
+enum InputField {
+        case firstName, lastName, email, password, passwordConfirm
+}
+
 struct RegisterScreen: View {
+    
+    @State private var path = NavigationPath()
+    @State private var firstName: String = ""
+    @State private var lastName: String = ""
+    @State private var email: String = ""
+    @State private var password: String = ""
+    @State private var passwordConfirm: String = ""
+    @State private var isEmailValid: Bool? = nil
+    @State private var isPasswordValid: Bool? = nil
+    @State private var doPasswordsMatch: Bool? = nil
+    @FocusState private var inFocus: InputField?
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        
+        NavigationStack(path: $path) {
+            VStack(spacing: Spacing.interItem * 2) {
+                headerImage
+                headerText
+                VStack(spacing: Spacing.interItem) {
+                    firstNameTextView
+                    lastNameTextView
+                    VStack(spacing: Spacing.interItem / 2) {
+                        emailTextView
+                        if let isEmailValid {
+                            if !isEmailValid {
+                                emailErrorText
+                            }
+                        }
+                    }
+                    VStack(spacing: Spacing.interItem / 2) {
+                        passwordSecureField
+                        if let isPasswordValid {
+                            if !isPasswordValid {
+                                passwordErrorText
+                            }
+                        }
+                    }
+                    VStack(spacing: Spacing.interItem / 2) {
+                        passwordConfirmSecureField
+                        if let doPasswordsMatch {
+                            if !doPasswordsMatch {
+                                passwordConfirmErrorText
+                            }
+                        }
+                    }
+                }
+                signupButton
+                Spacer()
+            }
+            .textFieldStyle(.roundedBorder)
+        }
+        .font(Font.body())
+        .padding(Spacing.interItem)
+        .navigationTitle(Translation.Startup.registerNavTitle.val)
+    }
+    
+    private func signUp() {
+        RequestManager.shared.performUserRegistration(
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: password
+        ) { response in
+            switch response.result {
+            case .success(_):
+                print()
+            case .failure(let error):
+                print()
+            }
+        }
+    }
+    
+    private func isFormValid() -> Bool {
+        return
+            !firstName.isEmpty &&
+            !lastName.isEmpty &&
+            email.isValidEmail &&
+            password.isValidPassword &&
+            doPasswordsMatch ?? false
+    }
+}
+
+
+
+private extension RegisterScreen {
+    
+    var headerImage: some View {
+        Image(systemName: "person.fill.badge.plus")
+            .resizable()
+            .frame(width: Size.detailHeaderLogo, height: Size.detailHeaderLogo)
+    }
+    
+    var headerText: some View {
+        Text(Translation.Startup.registerFormDescription.val)
+    }
+    
+    var firstNameTextView: some View {
+        TextField(
+            Translation.General.labelFirstName.val,
+            text: $firstName,
+            onCommit: {
+                inFocus = .lastName
+            })
+        .textContentType(.givenName)
+        .keyboardType(.default)
+        .submitLabel(.next)
+        .focused($inFocus, equals: .firstName)
+    }
+    
+    var lastNameTextView: some View {
+        TextField(
+            Translation.General.labelLastName.val,
+            text: $lastName,
+            onCommit: {
+                inFocus = .email
+            })
+        .textContentType(.familyName)
+        .keyboardType(.default)
+        .submitLabel(.next)
+        .focused($inFocus, equals: .lastName)
+    }
+    
+    var emailTextView: some View {
+        TextField(
+            Translation.General.labelEmail.val,
+            text: $email,
+            onEditingChanged: { isEdting in
+                isEmailValid = isEdting ? nil : email.isValidEmail
+            },
+            onCommit: {
+                isEmailValid = email.isValidEmail
+                inFocus = .password
+            }
+        )
+        .textInputAutocapitalization(.never)
+        .textContentType(.emailAddress)
+        .keyboardType(.emailAddress)
+        .submitLabel(.next)
+        .focused($inFocus, equals: .email)
+    }
+    
+    var emailErrorText: some View {
+        Text(Translation.General.emailValidation.val)
+            .font(Font.caption2())
+            .foregroundStyle(Color.labelDestructive)
+    }
+    
+    var passwordSecureField: some View {
+        SecureField(
+            Translation.General.labelPassword.val,
+            text: $password,
+            onCommit: {
+                isPasswordValid = password.isValidPassword
+                inFocus = .passwordConfirm
+            }
+        )
+        .textContentType(.none)
+        .disableAutocorrection(true)
+        .submitLabel(.next)
+        .focused($inFocus, equals: .password)
+    }
+    
+    var passwordErrorText: some View {
+        Text(Translation.General.passwordRequirements.val)
+            .font(Font.caption2())
+            .foregroundStyle(Color.labelDestructive)
+    }
+    
+    var passwordConfirmSecureField: some View {
+        SecureField(
+            Translation.General.labelPasswordConfirm.val,
+            text: $passwordConfirm,
+            onCommit: {
+                let didEnterPasswords = !password.isEmpty && !passwordConfirm.isEmpty
+                doPasswordsMatch = didEnterPasswords && password == passwordConfirm
+            }
+        )
+        .textContentType(.none)
+        .disableAutocorrection(true)
+        .submitLabel(.done)
+        .focused($inFocus, equals: .passwordConfirm)
+    }
+    
+    var passwordConfirmErrorText: some View {
+        Text(Translation.General.passwordMismatch.val)
+            .font(Font.caption2())
+            .foregroundStyle(Color.labelDestructive)
+    }
+    
+    var signupButton: some View {
+        Button(action: signUp) {
+            Text(Translation.General.buttonNext.val)
+                .textContentType(.givenName)
+        }
+        .accentColor(.labelLinks)
+        .disabled(!isFormValid())
     }
 }
 
