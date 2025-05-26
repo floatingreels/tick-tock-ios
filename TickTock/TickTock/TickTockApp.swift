@@ -11,7 +11,7 @@ import SwiftUI
 struct TickTockApp: App {
     var body: some Scene {
         WindowGroup {
-            SplashScreenView()
+            SplashScreen()
         }
     }
 }
