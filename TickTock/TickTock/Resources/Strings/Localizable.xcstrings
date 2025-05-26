@@ -1,6 +1,27 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "general_button_next" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        }
+      }
+    },
+    "general_email_validation_message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please provide a valid email address."
+          }
+        }
+      }
+    },
     "general_label_email" : {
       "localizations" : {
         "en" : {
@@ -55,6 +76,52 @@
         }
       }
     },
+    "general_password_mismatch" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The provided passwords don’t match."
+          }
+        }
+      }
+    },
+    "general_password_requirements_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please use at least 8 characters with at least 1 upper case letter, 1 lower case letter and 1 digit."
+          }
+        }
+      }
+    },
+    "Home" : {
+
+    },
+    "home_navigation_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
+          }
+        }
+      }
+    },
+    "login_form_description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please login by filling out the form below"
+          }
+        }
+      }
+    },
     "login_navigation_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -62,6 +129,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Login"
+          }
+        }
+      }
+    },
+    "register_form_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please register by filling out the form below"
           }
         }
       }
@@ -76,9 +154,6 @@
           }
         }
       }
-    },
-    "Some form to fill in to REGISTER" : {
-
     },
     "welcome_button_login" : {
       "extractionState" : "manual",
