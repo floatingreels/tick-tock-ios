@@ -21,13 +21,6 @@ public enum RequestMethod: String {
     case delete = "DELETE"
 }
 
-struct User: Codable {
-    let firstName: String
-    let lastName: String
-    let email: String
-    let password: String
-}
-
 typealias RequestQuery = [String: String]
 typealias RequestBody = [String: Any]
 
@@ -37,7 +30,7 @@ final class BackendService {
     
     private let baseURL: URL? = URL(string: "https://jiypepwmdk.eu-west-1.awsapprunner.com/api")
     
-    func executeForResponse<T>(
+    func execute<T>(
         request: Requestable,
         responseType: T.Type = T.self,
         completion: @escaping @Sendable (AFDataResponse<T>) -> Void
@@ -48,28 +41,15 @@ final class BackendService {
                 print("Request failed to build")
                 return
             }
-            AF.request(request).responseDecodable(of: responseType, completionHandler: completion)
-        } catch {
-            print("Request failed to build")
-        }
-    }
-    
-    func executeEmptyResponse(
-        request: Requestable,
-        emptyResponseCodes: Set<Int> = [201, 204, 205],
-        completion: @escaping @Sendable (AFDataResponse<Data>) -> Void
-    ) {
-        do {
-            guard let request = try buildRequest(request)
-            else {
-                print("Request failed to build")
-                return
-            }
-            AF.request(request).responseData { response in
-                if let code = response.response?.statusCode,
-                   emptyResponseCodes.contains(code) {
-                    
+            AF.request(request).responseDecodable(of: responseType) { response in
+                print("Status code \(response.response?.statusCode ?? 666)")
+                switch response.result {
+                case .success(_):
+                    print("Succes")
+                case .failure(let error):
+                    print("Failed with errorcode \(error.responseCode ?? 666): \(error.localizedDescription)")
                 }
+                completion(response)
             }
         } catch {
             print("Request failed to build")
