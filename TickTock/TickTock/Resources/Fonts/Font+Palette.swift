@@ -21,4 +21,16 @@ extension Font {
     static func body(weight: Font.Weight = .regular) -> Font {
         return .appFont(ofSize: 17, weight: weight)
     }
+    
+    static func footnote(weight: Font.Weight = .regular) -> Font {
+        return .appFont(ofSize: 13, weight: weight)
+    }
+    
+    static func caption(weight: Font.Weight = .regular) -> Font {
+        return .appFont(ofSize: 12, weight: weight)
+    }
+    
+    static func caption2(weight: Font.Weight = .regular) -> Font {
+        return .appFont(ofSize: 11, weight: weight)
+    }
 }
