@@ -9,6 +9,8 @@ import SwiftUI
 
 struct LoginScreen: View {
     
+    @EnvironmentObject private var coordinator: Coordinator
+    
     @FocusState private var inFocus: InputField?
     @State private var email: String = ""
     @State private var password: String = ""
@@ -16,29 +18,28 @@ struct LoginScreen: View {
     @State private var isPasswordValid: Bool? = nil
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: Spacing.interItem * 2) {
-                headerImage
-                headerText
-                VStack(spacing: Spacing.interItem / 2) {
-                    emailTextView
-                    if let isEmailValid {
-                        if !isEmailValid {
-                            emailErrorText
-                        }
+        VStack(spacing: Spacing.interItem * 2) {
+            headerImage
+            headerText
+            VStack(spacing: Spacing.interItem / 2) {
+                emailTextView
+                if let isEmailValid {
+                    if !isEmailValid {
+                        emailErrorText
                     }
                 }
-                VStack(spacing: Spacing.interItem / 2) {
-                    passwordSecureField
-                    if let isPasswordValid {
-                        if !isPasswordValid {
-                            passwordErrorText
-                        }
+            }
+            VStack(spacing: Spacing.interItem / 2) {
+                passwordSecureField
+                if let isPasswordValid {
+                    if !isPasswordValid {
+                        passwordErrorText
                     }
                 }
             }
         }
-        .navigationTitle(Translation.Startup.loginNavTitle.val)
+        .navigationTitle(Translation.Startup.registerNavTitle.val)
+        
         
         .onAppear {
             print("LoginScreen appeared")
@@ -120,10 +121,10 @@ extension LoginScreen {
         RequestManager.shared.performUserLogin(
             email: email,
             password: password
-        ) { response in
+        ) { [coordinator] response in
             switch response.result {
             case .success(_):
-                print()
+                coordinator.push(.home)
             case .failure(let error):
                 print()
             }

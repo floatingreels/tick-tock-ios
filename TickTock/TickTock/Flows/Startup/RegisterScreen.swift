@@ -13,7 +13,7 @@ enum InputField {
 
 struct RegisterScreen: View {
     
-    @State private var path = NavigationPath()
+    @EnvironmentObject private var coordinator: Coordinator
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var email: String = ""
@@ -26,7 +26,6 @@ struct RegisterScreen: View {
     
     var body: some View {
         
-        NavigationStack(path: $path) {
             VStack(spacing: Spacing.interItem * 2) {
                 headerImage
                 headerText
@@ -62,7 +61,7 @@ struct RegisterScreen: View {
                 Spacer()
             }
             .textFieldStyle(.roundedBorder)
-        }
+        
         .font(Font.body())
         .padding(Spacing.interItem)
         .navigationTitle(Translation.Startup.registerNavTitle.val)
@@ -74,10 +73,10 @@ struct RegisterScreen: View {
             lastName: lastName,
             email: email,
             password: password
-        ) { response in
+        ) { [coordinator] response in
             switch response.result {
             case .success(_):
-                print()
+                coordinator.push(.login)
             case .failure(let error):
                 print()
             }

@@ -8,14 +8,17 @@
 import SwiftUI
 
 struct WelcomeScreen: View {
+    
+    @EnvironmentObject private var coordinator: Coordinator
+    
     var body: some View {
         ZStack {
             Color(.backgroundPrimary)
                 .ignoresSafeArea()
             HStack {
                 Spacer()
-                NavigationLink {
-                    LoginScreen()
+                Button {
+                    coordinator.push(.login)
                 } label: {
                     Label(
                         Translation.Startup.buttonLogin.val,
@@ -23,9 +26,9 @@ struct WelcomeScreen: View {
                     )
                 }
                 Spacer()
-                NavigationLink {
-                    RegisterScreen()
-                } label: {
+                Button {
+                    coordinator.push(.register)
+                }  label: {
                     Label(
                         Translation.Startup.buttonRegister.val,
                         systemImage: "person.fill.badge.plus"
