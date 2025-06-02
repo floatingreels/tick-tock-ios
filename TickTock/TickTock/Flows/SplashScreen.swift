@@ -32,7 +32,7 @@ struct SplashScreen: View {
                 .padding(Spacing.interItem)
             }
             .navigationDestination(isPresented: $hasTimeElapsed) {
-                WelcomeScreen()
+                NavigatableView()
                     .navigationBarBackButtonHidden(true)
             }
         }
