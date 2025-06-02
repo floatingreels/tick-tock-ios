@@ -23,4 +23,12 @@ extension String {
         let passTest = NSPredicate(format: "SELF MATCHES %@", passRegEx)
         return passTest.evaluate(with: self) */
     }
+    
+    var isBlank: Bool {
+        return self.trimmed().isEmpty
+    }
+    
+    func trimmed() -> String {
+        return self.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
 }
