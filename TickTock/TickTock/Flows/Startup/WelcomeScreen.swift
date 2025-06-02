@@ -18,20 +18,20 @@ struct WelcomeScreen: View {
             HStack {
                 Spacer()
                 Button {
-                    coordinator.push(.login)
-                } label: {
-                    Label(
-                        Translation.Startup.buttonLogin.val,
-                        systemImage: "person.badge.shield.checkmark"
-                    )
-                }
-                Spacer()
-                Button {
                     coordinator.push(.register)
                 }  label: {
                     Label(
                         Translation.Startup.buttonRegister.val,
-                        systemImage: "person.fill.badge.plus"
+                        systemImage: "person.crop.circle.badge.plus"
+                    )
+                }
+                Spacer()
+                Button {
+                    coordinator.push(.login)
+                } label: {
+                    Label(
+                        Translation.Startup.buttonLogin.val,
+                        systemImage: "person.crop.circle"
                     )
                 }
                 Spacer()

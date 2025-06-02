@@ -11,7 +11,7 @@ struct AddClientScreen: View {
     
     @EnvironmentObject private var coordinator: Coordinator
     
-    @State private var clientName: String = ""
+    @State private var companyName: String = ""
     @State private var isClientNameValid: Bool? = nil
     
     var body: some View {
@@ -32,7 +32,7 @@ struct AddClientScreen: View {
 private extension AddClientScreen {
         
     var headerImage: some View {
-        Image(systemName: "person.fill.badge.checkmark")
+        Image(systemName: "person.3.sequence.fill")
             .resizable()
             .frame(width: Size.detailHeaderLogo, height: Size.detailHeaderLogo)
     }
@@ -44,12 +44,12 @@ private extension AddClientScreen {
     var clientNameTextView: some View {
         TextField(
             Translation.Client.clientNameLabel.val,
-            text: $clientName,
+            text: $companyName,
             onEditingChanged: { isEdting in
-                isClientNameValid = isEdting ? nil : !clientName.isBlank
+                isClientNameValid = isEdting ? nil : !companyName.isBlank
             },
             onCommit: {
-                isClientNameValid = !clientName.isBlank
+                isClientNameValid = !companyName.isBlank
             }
         )
         .textInputAutocapitalization(.never)
@@ -68,7 +68,7 @@ private extension AddClientScreen {
     }
     
     func addClient() {
-        RequestManager.shared.addClient(clientName: clientName) { [coordinator] response in
+        RequestManager.shared.addClient(companyName: companyName) { [coordinator] response in
             switch response.result {
             case .success:
                 coordinator.pop()

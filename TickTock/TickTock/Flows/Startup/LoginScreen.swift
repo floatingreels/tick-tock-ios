@@ -48,7 +48,7 @@ struct LoginScreen: View {
 private extension LoginScreen {
     
     var headerImage: some View {
-        Image(systemName: "person.fill.badge.checkmark")
+        Image(systemName: "person.crop.circle")
             .resizable()
             .frame(width: Size.detailHeaderLogo, height: Size.detailHeaderLogo)
     }
@@ -113,7 +113,7 @@ private extension LoginScreen {
     }
     
     func logIn() {
-        RequestManager.shared.performUserLogin(
+        AuthManager.shared.performUserLogin(
             email: email,
             password: password
         ) { [coordinator] response in

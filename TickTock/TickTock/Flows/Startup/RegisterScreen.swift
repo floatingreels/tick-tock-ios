@@ -70,7 +70,7 @@ struct RegisterScreen: View {
 private extension RegisterScreen {
     
     var headerImage: some View {
-        Image(systemName: "person.fill.badge.plus")
+        Image(systemName: "person.crop.circle.badge.plus")
             .resizable()
             .frame(width: Size.detailHeaderLogo, height: Size.detailHeaderLogo)
     }
@@ -181,7 +181,7 @@ private extension RegisterScreen {
     }
     
     func signUp() {
-        RequestManager.shared.performUserRegistration(
+        AuthManager.shared.performUserRegistration(
             firstName: firstName,
             lastName: lastName,
             email: email,
