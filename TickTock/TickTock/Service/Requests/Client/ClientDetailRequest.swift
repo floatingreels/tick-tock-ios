@@ -1,0 +1,17 @@
+//
+//  ClientDetailRequest.swift
+//  TickTock
+//
+//  Created by David Gunzburg on 01/06/2025.
+//
+
+import Foundation
+
+struct ClientDetailRequest: Requestable {
+    
+    let clientId: Int
+    var relativeURL: URL? { URL(string: "clients/\(clientId)") }
+    var method: RequestMethod { .get }
+    var query: RequestQuery? = nil
+    var body: RequestBody? = nil
+}

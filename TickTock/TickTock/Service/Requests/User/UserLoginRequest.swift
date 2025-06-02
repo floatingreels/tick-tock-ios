@@ -8,15 +8,12 @@
 import Foundation
 
 struct UserLoginRequest: Requestable {
+    
     let email: String
     let password: String
-    
     var relativeURL: URL? { URL(string: "users/login") }
-    
     var method: RequestMethod { .post }
-    
     var query: RequestQuery? { nil }
-    
     var body: RequestBody? {
         return [
             "email": email,
