@@ -142,9 +142,6 @@
     "Hello, Joe Tester!" : {
 
     },
-    "Home" : {
-
-    },
     "home_button_add_client" : {
       "extractionState" : "manual",
       "localizations" : {
