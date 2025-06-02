@@ -37,20 +37,15 @@ struct LoginScreen: View {
                     }
                 }
             }
+            logInButton
+            Spacer()
         }
-        .navigationTitle(Translation.Startup.registerNavTitle.val)
-        
-        
-        .onAppear {
-            print("LoginScreen appeared")
-        }
-        .onDisappear() {
-            print("LoginScreen disappeared")
-        }
+        .navigationTitle(Translation.Startup.loginNavTitle.val)
+        .textFieldStyle(.roundedBorder)
     }
 }
 
-extension LoginScreen {
+private extension LoginScreen {
     
     var headerImage: some View {
         Image(systemName: "person.fill.badge.checkmark")
@@ -117,16 +112,16 @@ extension LoginScreen {
         .disabled(!isFormValid())
     }
     
-    private func logIn() {
+    func logIn() {
         RequestManager.shared.performUserLogin(
             email: email,
             password: password
         ) { [coordinator] response in
             switch response.result {
-            case .success(_):
+            case .success:
                 coordinator.push(.home)
             case .failure(let error):
-                print()
+                print(error.localizedDescription)
             }
         }
     }

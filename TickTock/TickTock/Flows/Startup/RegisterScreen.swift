@@ -61,35 +61,7 @@ struct RegisterScreen: View {
                 Spacer()
             }
             .textFieldStyle(.roundedBorder)
-        
-        .font(Font.body())
-        .padding(Spacing.interItem)
-        .navigationTitle(Translation.Startup.registerNavTitle.val)
-    }
-    
-    private func signUp() {
-        RequestManager.shared.performUserRegistration(
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            password: password
-        ) { [coordinator] response in
-            switch response.result {
-            case .success(_):
-                coordinator.push(.login)
-            case .failure(let error):
-                print()
-            }
-        }
-    }
-    
-    private func isFormValid() -> Bool {
-        return
-            !firstName.isEmpty &&
-            !lastName.isEmpty &&
-            email.isValidEmail &&
-            password.isValidPassword &&
-            doPasswordsMatch ?? false
+            .navigationTitle(Translation.Startup.registerNavTitle.val)
     }
 }
 
@@ -167,7 +139,7 @@ private extension RegisterScreen {
                 inFocus = .passwordConfirm
             }
         )
-        .textContentType(.none)
+        .textContentType(.newPassword)
         .disableAutocorrection(true)
         .submitLabel(.next)
         .focused($inFocus, equals: .password)
@@ -184,11 +156,11 @@ private extension RegisterScreen {
             Translation.General.labelPasswordConfirm.val,
             text: $passwordConfirm,
             onCommit: {
-                let didEnterPasswords = !password.isEmpty && !passwordConfirm.isEmpty
+                let didEnterPasswords = !password.isBlank && !passwordConfirm.isBlank
                 doPasswordsMatch = didEnterPasswords && password == passwordConfirm
             }
         )
-        .textContentType(.none)
+        .textContentType(.password)
         .disableAutocorrection(true)
         .submitLabel(.done)
         .focused($inFocus, equals: .passwordConfirm)
@@ -203,10 +175,34 @@ private extension RegisterScreen {
     var signupButton: some View {
         Button(action: signUp) {
             Text(Translation.General.buttonNext.val)
-                .textContentType(.givenName)
         }
         .accentColor(.labelLinks)
         .disabled(!isFormValid())
+    }
+    
+    func signUp() {
+        RequestManager.shared.performUserRegistration(
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: password
+        ) { [coordinator] response in
+            switch response.result {
+            case .success(_):
+                coordinator.push(.login)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func isFormValid() -> Bool {
+        return
+            !firstName.isBlank &&
+            !lastName.isBlank &&
+            email.isValidEmail &&
+            password.isValidPassword &&
+            doPasswordsMatch ?? false
     }
 }
 
