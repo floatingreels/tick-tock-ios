@@ -38,8 +38,21 @@ extension Translation {
         case registerNavTitle = "register_navigation_title"
         case buttonLogin = "welcome_button_login"
         case buttonRegister = "welcome_button_register"
+        case buttonAddClient = "home_button_add_client"
+        case buttonNewProject = "home_button_new_project"
+        case buttonStartSession = "home_button_start_session"
         case registerFormDescription = "register_form_description"
         case loginFormDescription = "login_form_description"
+        
+        var val: String {
+            let res = LocalizedStringResource(self.rawValue, table: "Localizable")
+            return String(localized: res)
+        }
+    }
+    
+    enum Client: String.LocalizationValue {
+        case addClientNavTitle = "add_client_navigation_title"
+        case clientNameLabel = "client_name_label"
         
         var val: String {
             let res = LocalizedStringResource(self.rawValue, table: "Localizable")

@@ -1,6 +1,26 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "add_client_navigation_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add client"
+          }
+        }
+      }
+    },
+    "client_name_label" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client name"
+          }
+        }
+      }
+    },
     "general_button_next" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -98,8 +118,65 @@
         }
       }
     },
+    "Hello %@ %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Hello %1$@ %2$@"
+          }
+        }
+      }
+    },
+    "Hello, %@ %@!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Hello, %1$@ %2$@!"
+          }
+        }
+      }
+    },
+    "Hello, Joe Tester!" : {
+
+    },
     "Home" : {
 
+    },
+    "home_button_add_client" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add client"
+          }
+        }
+      }
+    },
+    "home_button_new_project" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New project"
+          }
+        }
+      }
+    },
+    "home_button_start_session" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start session"
+          }
+        }
+      }
     },
     "home_navigation_title" : {
       "extractionState" : "manual",
@@ -154,6 +231,9 @@
           }
         }
       }
+    },
+    "Something went wrong" : {
+
     },
     "welcome_button_login" : {
       "extractionState" : "manual",
