@@ -25,22 +25,22 @@ struct HomeScreen: View {
                 startSessionButton
             }
         }
-        .navigationTitle("Home")
-    }
-    
-    private func addClient() {
-        coordinator.push(.addClient)
-    }
-    
-    private func newProject() {
-    }
-    
-    private func startSession() {
+        .toolbar {
+            ToolbarItem {
+                toolBarButton
+            }
+        }
+        .navigationTitle(Translation.Startup.homeNavTitle.val)
     }
 }
 
-extension HomeScreen {
+private extension HomeScreen {
     
+    var toolBarButton: some View {
+        Button(action: logout) {
+            Image(systemName: ToolBarButtonType.settings.rawValue)
+        }
+    }
     var addClientButton: some View {
         Button(action: addClient) {
             Text(Translation.Startup.buttonAddClient.val)
@@ -60,6 +60,21 @@ extension HomeScreen {
             Text(Translation.Startup.buttonStartSession.val)
         }
         .accentColor(.labelLinks)
+    }
+    
+    func addClient() {
+        coordinator.push(.addClient)
+    }
+    
+    func newProject() {
+    }
+    
+    func startSession() {
+    }
+    
+    func logout() {
+        HousekeepingManager.shared.logout()
+        coordinator.popToRoot()
     }
 }
 

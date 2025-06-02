@@ -19,9 +19,12 @@ struct NavigatableView: View {
                     .padding(Spacing.interItem)
                     .navigationDestination(for: AppScreen.self) { screen in
                         if screen.shouldHideBackButton() {
-                            coordinator.build(screen).navigationBarBackButtonHidden()
+                            coordinator.build(screen)
+                                .navigationBarBackButtonHidden()
+                                .navigationBarTitleDisplayMode(.large)
                         } else {
                             coordinator.build(screen)
+                                .navigationBarTitleDisplayMode(.inline)
                         }
                     }
                     .sheet(item: $coordinator.sheet) { sheet in
@@ -33,4 +36,11 @@ struct NavigatableView: View {
         }
         .environmentObject(coordinator)
     }
+}
+
+enum ToolBarButtonType: String {
+    case settings = "gearshape"
+    case add = "plus"
+    case edit = "pencil"
+    case delete = "trash.fill"
 }
