@@ -29,7 +29,7 @@ final class BackendService {
     static let shared = BackendService()
     
     private let baseURL: URL? = URL(string: "https://jiypepwmdk.eu-west-1.awsapprunner.com/api")
-    private let authHeaderTuple = ("Authorization", "Bearer ")
+    private let authHeaderTuple = ("Authorization", "Bearer")
     private let ajaxHeaderTuple = ("X-Requested-With", "XMLHttpRequest")
     private let contentHeaderTuple = ("Content-Type", "application/json")
     
@@ -41,31 +41,22 @@ final class BackendService {
         do {
             guard let request = try buildRequest(request)
             else {
-                print("Request failed to build")
+                logRequestFailure()
                 return
             }
             AF.request(request)
-                .responseDecodable(of: responseType) { response in
-                    if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                        print("RESPONSE\nResponse body: \(utf8Text)")
-                    }
-                    print("Response code: \(response.response?.statusCode ?? 666)\n")
+                .responseDecodable(of: responseType) { [weak self] response in
+                    guard let self else { return }
                     switch response.result {
-                    case .success(let result):
-                        if let result = result as? EmptyResponse {
-                            if result.success {
-                                print("SUCCESS: \(result.message)\n")
-                            } else {
-                                print("FAILURE: \(result.message)\n")
-                            }
-                        }
+                    case .success(_):
+                        logResponseSuccess(code: response.response?.statusCode, bodyData: response.data)
                     case .failure(let error):
-                        print("Failed with errorcode \(error.responseCode ?? 666): \(error.localizedDescription)\n")
+                       logResponseFailure(error)
                     }
                     completion(response)
                 }
         } catch {
-            print("Request failed to build")
+            logRequestFailure()
         }
     }
     
@@ -105,17 +96,21 @@ final class BackendService {
             do {
                 let data = try JSONSerialization.data(withJSONObject: body, options: [])
                 urlRequest.httpBody = data
-                print(buildSuccessLog(request: request, url: newURL, urlRequest: urlRequest, bodyData: data))
+                logRequestSuccess(request: request, url: newURL, urlRequest: urlRequest, bodyData: data)
             } catch {
-                print("JSON serialization failed")
+                print("ERROR\nError message: JSON serialization failed")
             }
         } else {
-            print(buildSuccessLog(request: request, url: newURL, urlRequest: urlRequest))
+            logRequestSuccess(request: request, url: newURL, urlRequest: urlRequest)
         }
         return urlRequest
     }
     
-    private func buildSuccessLog(request: Requestable, url: URL, urlRequest: URLRequest, bodyData: Data? = nil) -> String {
+    private func logRequestFailure() {
+        print("ERROR\nError message: request failed to build")
+    }
+    
+    private func logRequestSuccess(request: Requestable, url: URL, urlRequest: URLRequest, bodyData: Data? = nil) {
         var log = "REQUEST\n"
         log += "Request URL: \(url.absoluteString)\n"
         log += "Request headers:\n"
@@ -123,7 +118,7 @@ final class BackendService {
             log += "    \(contentHeaderTuple.0) = \(content)\n"
         }
         if let auth = urlRequest.value(forHTTPHeaderField: authHeaderTuple.0) {
-            log += "    \(authHeaderTuple.0) = \(authHeaderTuple.1)\(auth)\n"
+            log += "    \(authHeaderTuple.0) = \(authHeaderTuple.1) \(auth)\n"
         }
         if let ajax = urlRequest.value(forHTTPHeaderField: ajaxHeaderTuple.0) {
             log += "    \(ajaxHeaderTuple.0) = \(ajax)\n"
@@ -135,6 +130,24 @@ final class BackendService {
         } else {
             log += "none"
         }
-        return log
+        print(log)
+    }
+    
+    private func logResponseFailure(_ error: AFError) {
+        var log = "ERROR\n"
+        log += "Error code: \(error.responseCode ?? 666)"
+        log += "Error message: \(error.localizedDescription)"
+        print()
+    }
+    
+    private func logResponseSuccess(code: Int?, bodyData: Data?) {
+        var log = "RESPONSE\n"
+        if let code {
+            log += "Response code: \(code)"
+        }
+        if let bodyData, let bodyString = String(data: bodyData, encoding: .utf8)  {
+            log += "Response body: \(bodyString)"
+        }
+        print(log)
     }
 }
