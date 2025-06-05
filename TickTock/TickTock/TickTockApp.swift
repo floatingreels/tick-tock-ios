@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct TickTockApp: App {
+    
+    @ObservedObject private var authManager = AuthManager.shared
+    
     var body: some Scene {
         WindowGroup {
-            NavigatableView()
+            NavigatableView(root: authManager.isLoggedIn ? AppScreen.home : AppScreen.welcome)
         }
     }
 }

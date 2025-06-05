@@ -19,7 +19,7 @@ final class TickTockDefaults {
     
     private init() {}
     
-    var userId: Int? { defaults.integer(forKey: userIdKey) }
+    var userId: Int { defaults.integer(forKey: userIdKey) }
     
     var firstName: String? {
         guard let firstName = defaults.string(forKey: userFirstNameKey),
