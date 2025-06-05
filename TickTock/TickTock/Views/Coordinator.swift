@@ -26,7 +26,7 @@ class Coordinator: ObservableObject {
     }
     
     func presentSheet(_ screen: AppScreen) {
-        self.sheet = sheet
+        self.sheet = screen
     }
     
     func dismissSheet() {
@@ -34,13 +34,15 @@ class Coordinator: ObservableObject {
     }
     
     @ViewBuilder
-    func build(_ screen: AppScreen) -> some View {
+    func buildScreen(_ screen: AppScreen) -> some View {
         switch screen {
         case .welcome: WelcomeScreen()
         case .register: RegisterScreen()
         case .login: LoginScreen()
         case .home: HomeScreen()
         case .addClient: AddClientScreen()
+        case .success(let data): SuccessScreen(data: data)
+        case .listClients: ListClientsScreen()
         }
     }
     
@@ -49,23 +51,6 @@ class Coordinator: ObservableObject {
         switch sheet {
         case .addClient: AddClientScreen()
         default: HomeScreen()
-        }
-    }
-}
-
-enum AppScreen: String, Hashable, Identifiable {
-    case welcome
-    case register
-    case login
-    case home
-    case addClient
-    
-    var id: String { self.rawValue }
-    
-    func shouldHideBackButton() -> Bool {
-        switch self {
-        case .home: true
-        default: false
         }
     }
 }

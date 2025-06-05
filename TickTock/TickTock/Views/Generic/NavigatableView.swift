@@ -7,32 +7,34 @@
 
 import SwiftUI
 
+typealias DismissHandler = () -> Void
+
 struct NavigatableView: View {
     
     @StateObject private var coordinator = Coordinator()
+    private var root: AppScreen
+    
+    init(root: AppScreen) {
+        self.root = root
+    }
     
     var body: some View {
         NavigationStack(path: $coordinator.path) {
             ZStack {
                 Color.backgroundPrimary
-                coordinator.build(BackendCredentials.shared.getAccessToken() != nil ? AppScreen.home : AppScreen.welcome)
-                    .padding(Spacing.interItem)
+                coordinator.buildScreen(root)
+                    .navigationBarTitleDisplayMode(root.hasLargeTitles ? .large : .inline)
                     .navigationDestination(for: AppScreen.self) { screen in
-                        if screen.shouldHideBackButton() {
-                            coordinator.build(screen)
-                                .navigationBarBackButtonHidden()
-                                .navigationBarTitleDisplayMode(.large)
-                        } else {
-                            coordinator.build(screen)
-                                .navigationBarTitleDisplayMode(.inline)
-                        }
+                        coordinator.buildScreen(screen)
+                            .navigationBarBackButtonHidden(screen.hidesBackButton)
+                            .navigationBarTitleDisplayMode(screen.hasLargeTitles ? .large : .inline)
+                            .padding(Spacing.interItem)
                     }
                     .sheet(item: $coordinator.sheet) { sheet in
                         coordinator.buildSheet(sheet)
                     }
+                    .font(Font.body())
             }
-            .ignoresSafeArea()
-            .font(Font.body())
         }
         .environmentObject(coordinator)
     }
