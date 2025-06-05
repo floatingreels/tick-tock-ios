@@ -41,7 +41,7 @@ class Coordinator: ObservableObject {
         case .login: LoginScreen()
         case .home: HomeScreen()
         case .addClient: AddClientScreen()
-        case .success(let data): SuccessScreen(data: data)
+        case .success(let data): GenericSuccessScreen(data: data)
         case .listClients: ListClientsScreen()
         }
     }

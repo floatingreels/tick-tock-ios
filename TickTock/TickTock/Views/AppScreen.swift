@@ -14,7 +14,7 @@ enum AppScreen: Hashable, Identifiable {
     case home
     case addClient
     case listClients
-    case success(SuccessScreenData)
+    case success(GenericSuccessData)
     
     var id: String { String(describing: self) }
     
