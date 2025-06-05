@@ -11,11 +11,11 @@ struct GetClientsResponse: Codable {
     let clients: [Client]
 }
 
-struct Client: Codable {
+struct Client: Codable, Identifiable {
     
     let id: Int
     let name: String
-    let userId: String
+    let userId: Int
     
     enum CodingKeys: String, CodingKey {
         case id = "clientId"
