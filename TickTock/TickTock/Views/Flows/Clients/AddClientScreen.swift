@@ -68,7 +68,7 @@ private extension AddClientScreen {
         RequestManager.shared.addClient(companyName: companyName) { [coordinator] response in
             switch response.result {
             case .success:
-                let data = SuccessScreenData(message: Translation.Client.addClientSuccessMessage.val)
+                let data = GenericSuccessData(message: Translation.Client.addClientSuccessMessage.val)
                 coordinator.push(.success(data))
             case .failure(let error):
                 print(error.localizedDescription)
