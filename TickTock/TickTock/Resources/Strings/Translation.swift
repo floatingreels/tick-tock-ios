@@ -8,9 +8,7 @@
 import SwiftUICore
 import Foundation
 
-enum Translation {
-    
-}
+enum Translation {}
 
 extension Translation {
         
@@ -24,9 +22,9 @@ extension Translation {
         case passwordRequirements = "general_password_requirements_message"
         case emailValidation = "general_email_validation_message"
         case passwordMismatch = "general_password_mismatch"
+        case successScreenMessage = "general_success_message"
         
         var val: String {
-            
             let res = LocalizedStringResource(self.rawValue, table: "Localizable")
             return String(localized: res)
         }
@@ -39,6 +37,8 @@ extension Translation {
         case buttonLogin = "welcome_button_login"
         case buttonRegister = "welcome_button_register"
         case buttonAddClient = "home_button_add_client"
+        case buttonListClients = "home_button_list_clients"
+        case buttonListProjects = "home_button_list_projects"
         case buttonNewProject = "home_button_new_project"
         case buttonStartSession = "home_button_start_session"
         case registerFormDescription = "register_form_description"
@@ -52,7 +52,10 @@ extension Translation {
     
     enum Client: String.LocalizationValue {
         case addClientNavTitle = "add_client_navigation_title"
+        case addClientSuccessMessage = "add_client_success_message"
         case clientNameLabel = "client_name_label"
+        case listClientsNavTitle = "list_clients_navigation_title"
+        case detailClientNavTitle = "detail_client_navigation_title"
         
         var val: String {
             let res = LocalizedStringResource(self.rawValue, table: "Localizable")

@@ -11,12 +11,34 @@
         }
       }
     },
+    "add_client_success_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have successfully added a new client"
+          }
+        }
+      }
+    },
     "client_name_label" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Client name"
+          }
+        }
+      }
+    },
+    "detail_client_navigation_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client details"
           }
         }
       }
@@ -118,6 +140,17 @@
         }
       }
     },
+    "general_success_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Congratulations, this flow is complete!"
+          }
+        }
+      }
+    },
     "Hello %@ %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -153,6 +186,28 @@
         }
       }
     },
+    "home_button_list_clients" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show all clients"
+          }
+        }
+      }
+    },
+    "home_button_list_projects" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show all projects"
+          }
+        }
+      }
+    },
     "home_button_new_project" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -182,6 +237,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Home"
+          }
+        }
+      }
+    },
+    "list_clients_navigation_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All clients"
           }
         }
       }
