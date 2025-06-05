@@ -51,7 +51,7 @@ final class BackendService {
                     case .success(_):
                         logResponseSuccess(code: response.response?.statusCode, bodyData: response.data)
                     case .failure(let error):
-                       logResponseFailure(error)
+                        logResponseFailure(error)
                     }
                     completion(response)
                 }
@@ -89,7 +89,7 @@ final class BackendService {
         urlRequest.setValue(contentHeaderTuple.1, forHTTPHeaderField: contentHeaderTuple.0)
         if let accesToken = BackendCredentials.shared.getAccessToken() {
             urlRequest.addValue(ajaxHeaderTuple.1, forHTTPHeaderField: ajaxHeaderTuple.0)
-            urlRequest.addValue("\(authHeaderTuple.1)\(accesToken)", forHTTPHeaderField: authHeaderTuple.0)
+            urlRequest.addValue("\(authHeaderTuple.1) \(accesToken)", forHTTPHeaderField: authHeaderTuple.0)
         }
         // add body to the request in json format
         if let body = request.body {
@@ -118,7 +118,7 @@ final class BackendService {
             log += "    \(contentHeaderTuple.0) = \(content)\n"
         }
         if let auth = urlRequest.value(forHTTPHeaderField: authHeaderTuple.0) {
-            log += "    \(authHeaderTuple.0) = \(authHeaderTuple.1) \(auth)\n"
+            log += "    \(authHeaderTuple.0) = \(auth)\n"
         }
         if let ajax = urlRequest.value(forHTTPHeaderField: ajaxHeaderTuple.0) {
             log += "    \(ajaxHeaderTuple.0) = \(ajax)\n"
@@ -135,15 +135,15 @@ final class BackendService {
     
     private func logResponseFailure(_ error: AFError) {
         var log = "ERROR\n"
-        log += "Error code: \(error.responseCode ?? 666)"
+        log += "Error code: \(error.responseCode ?? 666)\n"
         log += "Error message: \(error.localizedDescription)"
-        print()
+        print(log)
     }
     
     private func logResponseSuccess(code: Int?, bodyData: Data?) {
         var log = "RESPONSE\n"
         if let code {
-            log += "Response code: \(code)"
+            log += "Response code: \(code)\n"
         }
         if let bodyData, let bodyString = String(data: bodyData, encoding: .utf8)  {
             log += "Response body: \(bodyString)"
