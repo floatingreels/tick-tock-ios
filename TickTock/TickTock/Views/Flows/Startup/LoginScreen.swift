@@ -48,9 +48,7 @@ struct LoginScreen: View {
 private extension LoginScreen {
     
     var headerImage: some View {
-        Image(systemName: "person.crop.circle")
-            .resizable()
-            .frame(width: Size.detailHeaderLogo, height: Size.detailHeaderLogo)
+        HeaderImageView(image: ("person.crop.circle", true))
     }
     
     var headerText: some View {

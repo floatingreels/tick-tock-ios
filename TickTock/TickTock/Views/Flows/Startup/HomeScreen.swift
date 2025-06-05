@@ -8,20 +8,27 @@
 import SwiftUI
 
 struct HomeScreen: View {
-    
+
+    private let test = "Testing dismiss handler on sheet"
     @EnvironmentObject private var coordinator: Coordinator
     
     var body: some View {
-        VStack(spacing: Spacing.interItem * 2) {
+        VStack(spacing: Spacing.interItem * 4) {
             if let first =  TickTockDefaults.shared.firstName,
                let last = TickTockDefaults.shared.lastName {
                 Text("Hello, \(first) \(last)!")
             } else {
                 Text(isPreview ? "Hello, Joe Tester!" : "Something went wrong")
             }
-            VStack(spacing: Spacing.interItem) {
-                addClientButton
-                newProjectButton
+            VStack(spacing: Spacing.interItem * 3) {
+                HStack(spacing: Spacing.interItem * 3) {
+                    listClientsButton
+                    addClientButton
+                }
+                HStack(spacing: Spacing.interItem * 3) {
+                    newProjectButton
+                    newProjectButton
+                }
                 startSessionButton
             }
         }
@@ -41,13 +48,26 @@ private extension HomeScreen {
             Image(systemName: ToolBarButtonType.settings.rawValue)
         }
     }
-    var addClientButton: some View {
-        Button(action: addClient) {
-            Text(Translation.Startup.buttonAddClient.val)
+    var listClientsButton: some View {
+        Button(action: showClientsList) {
+            Text(Translation.Startup.buttonListClients.val)
         }
         .accentColor(.labelLinks)
     }
-    
+    var addClientButton: some View {
+        NavigatableSheetPresenter(
+            navigatable: {
+                NavigatableView(root: .addClient)
+            },
+            label: Translation.Startup.buttonAddClient.val)
+        .accentColor(.labelLinks)
+    }
+    var listProjectsButton: some View {
+        Button(action: showProjectsList) {
+            Text(Translation.Startup.buttonListProjects.val)
+        }
+        .accentColor(.labelLinks)
+    }
     var newProjectButton: some View {
         Button(action: newProject) {
             Text(Translation.Startup.buttonNewProject.val)
@@ -62,18 +82,25 @@ private extension HomeScreen {
         .accentColor(.labelLinks)
     }
     
-    func addClient() {
-        coordinator.push(.addClient)
+    func showClientsList() {
+        coordinator.push(.listClients)
+    }
+    
+    func showProjectsList() {
+        print(#function)
+//        coordinator.push(.listProjects)
     }
     
     func newProject() {
+        print(#function)
     }
     
     func startSession() {
+        print(#function)
     }
     
     func logout() {
-        HousekeepingManager.shared.logout()
+        AuthManager.shared.logout()
         coordinator.popToRoot()
     }
 }

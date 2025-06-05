@@ -70,9 +70,7 @@ struct RegisterScreen: View {
 private extension RegisterScreen {
     
     var headerImage: some View {
-        Image(systemName: "person.crop.circle.badge.plus")
-            .resizable()
-            .frame(width: Size.detailHeaderLogo, height: Size.detailHeaderLogo)
+        HeaderImageView(image: ("person.crop.circle.badge.plus", true))
     }
     
     var headerText: some View {
