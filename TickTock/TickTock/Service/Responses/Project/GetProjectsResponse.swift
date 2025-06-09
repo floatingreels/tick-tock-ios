@@ -9,9 +9,10 @@ struct GetProjectsResponse: Codable {
     let projects: [Project]
 }
 
-struct Project: Codable {
-    let id: String
-    let clientId: String
+struct Project: Codable, Identifiable {
+    
+    let id: Int
+    let clientId: Int
     let name: String
     let rate: Double?
     private let rateTypeString: String?
