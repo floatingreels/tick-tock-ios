@@ -9,12 +9,14 @@ import Foundation
 
 struct UpdateProjectRequest: Requestable {
     
+    let clientId: Int
     let projectId: Int
     let projectName: String?
     let rate: Double?
     let rateType: RateType?
     let status: ProjectStatus?
-    var relativeURL: URL? { URL(string: "projects/\(projectId)") }
+    
+    var relativeURL: URL? { URL(string: "users/\(TickTockDefaults.shared.userId)/clients/\(clientId)/projects/\(projectId)") }
     var method: RequestMethod { .put }
     var query: RequestQuery? = nil
     var body: RequestBody? {

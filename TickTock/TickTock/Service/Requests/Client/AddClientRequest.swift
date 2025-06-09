@@ -10,14 +10,13 @@ import Foundation
 struct AddClientRequest: Requestable {
     
     let companyName: String
-    var relativeURL: URL? { URL(string: "clients") }
+    
+    var relativeURL: URL? { URL(string: "users/\(TickTockDefaults.shared.userId)/clients") }
     var method: RequestMethod { .post }
     var query: RequestQuery? { nil }
     var body: RequestBody? {
-        let body: [String: Any] = [
-            "companyName": companyName,
-            "userId": TickTockDefaults.shared.userId
+        return [
+            "companyName": companyName
         ]
-        return body
     }
 }

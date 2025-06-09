@@ -9,7 +9,10 @@ import Foundation
 
 struct GetSessionsRequest: Requestable {
     
-    var relativeURL: URL? { URL(string: "sessions") }
+    let clientId: Int
+    let projectId: Int
+    
+    var relativeURL: URL? { URL(string: "users/\(TickTockDefaults.shared.userId)/clients/\(clientId)/projects/\(projectId)/sessions") }
     var method: RequestMethod { .get }
     var query: RequestQuery? = nil
     var body: RequestBody? = nil

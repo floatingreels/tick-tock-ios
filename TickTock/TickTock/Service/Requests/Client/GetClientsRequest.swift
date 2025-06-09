@@ -9,7 +9,7 @@ import Foundation
 
 struct GetClienstRequest: Requestable {
     
-    var relativeURL: URL? { URL(string: "clients") }
+    var relativeURL: URL? { URL(string: "users/\(TickTockDefaults.shared.userId)/clients") }
     var method: RequestMethod { .get }
     var query: RequestQuery? = nil
     var body: RequestBody? = nil

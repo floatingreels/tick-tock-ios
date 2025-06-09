@@ -16,9 +16,23 @@ final class AuthManager: ObservableObject {
 
     private init() {}
     
-    func performUserRegistration(firstName: String, lastName: String, email: String, password: String, completion: @escaping @Sendable (AFDataResponse<EmptyResponse>) -> Void) {
+    func performUserRegistration(firstName: String, lastName: String, email: String, password: String, completion: @escaping @Sendable (AFDataResponse<LoginResponse>) -> Void) {
         let request = UserRegistrationRequest(firstName: firstName, lastName: lastName, email: email, password: password)
-        service.execute(request: request, completion: completion)
+        service.execute(
+            request: request,
+            responseType: LoginResponse.self) { [weak self] response in
+                guard let self else { return }
+                switch response.result {
+                case .success(let auth):
+                    self.isLoggedIn = true
+                    BackendCredentials.shared.setAccessToken(auth.token)
+                    TickTockDefaults.shared.storeUser(user: auth.user)
+                    completion(response)
+                case .failure(_):
+                    self.isLoggedIn = false
+                    completion(response)
+                }
+            }
     }
     
     func performUserLogin(email: String, password: String, completion: @escaping @Sendable (AFDataResponse<LoginResponse>) -> Void) {
@@ -28,10 +42,10 @@ final class AuthManager: ObservableObject {
             responseType: LoginResponse.self) { [weak self] response in
                 guard let self else { return }
                 switch response.result {
-                case .success(let login):
+                case .success(let auth):
                     self.isLoggedIn = true
-                    BackendCredentials.shared.setAccessToken(login.token)
-                    TickTockDefaults.shared.storeUser(user: login.user)
+                    BackendCredentials.shared.setAccessToken(auth.token)
+                    TickTockDefaults.shared.storeUser(user: auth.user)
                     completion(response)
                 case .failure(_):
                     self.isLoggedIn = false

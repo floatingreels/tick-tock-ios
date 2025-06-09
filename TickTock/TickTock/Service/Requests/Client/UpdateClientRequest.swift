@@ -11,7 +11,7 @@ struct UpdateClientRequest: Requestable {
     
     let clientId: Int
     let companyName: String?
-    var relativeURL: URL? { URL(string: "clients/\(clientId)") }
+    var relativeURL: URL? { URL(string: "users/\(TickTockDefaults.shared.userId)/clients/\(clientId)") }
     var method: RequestMethod { .put }
     var query: RequestQuery? = nil
     var body: RequestBody? {

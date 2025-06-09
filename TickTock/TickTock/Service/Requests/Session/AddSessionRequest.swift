@@ -9,14 +9,16 @@ import Foundation
 
 struct AddSessionRequest: Requestable {
     
-    let projectId: String
+    let clientId: Int
+    let projectId: Int
     let start: Date?
     let end: Date?
-    var relativeURL: URL? { URL(string: "sessions") }
+    
+    var relativeURL: URL? { URL(string: "users/\(TickTockDefaults.shared.userId)/clients/\(clientId)/projects/\(projectId)/sessions") }
     var method: RequestMethod { .post }
     var query: RequestQuery? { nil }
     var body: RequestBody? {
-        var body = ["projectId": projectId]
+        var body: [String: Any] = [:]
         if let start {
             body["startedAt"] = ISODateFormatter.shared.isoStringFromDate(start)
         }

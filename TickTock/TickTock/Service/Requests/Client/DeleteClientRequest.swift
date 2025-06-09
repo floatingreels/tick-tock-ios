@@ -10,7 +10,8 @@ import Foundation
 struct DeleteClientRequest: Requestable {
     
     let clientId: Int
-    var relativeURL: URL? { URL(string: "clients/\(clientId)") }
+    
+    var relativeURL: URL? { URL(string: "users/\(TickTockDefaults.shared.userId)/clients/\(clientId)") }
     var method: RequestMethod { .delete }
     var query: RequestQuery? = nil
     var body: RequestBody? = nil

@@ -9,8 +9,11 @@ import Foundation
 
 struct DeleteSessionRequest: Requestable {
     
+    let clientId: Int
+    let projectId: Int
     let sessionId: Int
-    var relativeURL: URL? { URL(string: "sessions/\(sessionId)") }
+    
+    var relativeURL: URL? { URL(string: "users/\(TickTockDefaults.shared.userId)/clients/\(clientId)/projects/\(projectId)/sessions/\(sessionId)") }
     var method: RequestMethod { .delete}
     var query: RequestQuery?
     var body: RequestBody?

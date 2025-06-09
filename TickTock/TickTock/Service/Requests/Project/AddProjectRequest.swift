@@ -9,32 +9,40 @@ import Foundation
 
 struct AddProjectRequest: Requestable {
     
-    let projectName: String
-    let rate: Double?
-    let rateType: RateType?
     let clientId: Int
-    var relativeURL: URL? { URL(string: "projects") }
+    let projectName: String
+    let rate: Double
+    let rateType: RateType
+    
+    var relativeURL: URL? { URL(string: "users/\(TickTockDefaults.shared.userId)/clients/\(clientId)/projects") }
     var method: RequestMethod { .post }
     var query: RequestQuery? { nil }
     var body: RequestBody? {
-        var body: [String: Any] = [
+        return [
             "projectName": projectName,
-            "clientId": clientId,
-            "status": ProjectStatus.active.rawValue
+            "status": ProjectStatus.active.rawValue,
+            "rate": rate,
+            "rateType": rateType.rawValue
         ]
-        if let rate, let rateType {
-            body["rate"] = rate
-            body["rateType"] = rateType.rawValue
-        }
-        return body
     }
 }
 
-enum RateType: String {
-    case hour = "hourly"
-    case day = "daily"
-    case week = "weekly"
-    case month = "monthly"
+enum RateType: String, CaseIterable, Identifiable {
+    case hour = "hour"
+    case day = "day"
+    case week = "week"
+    case month = "month"
+    
+    var id: RateType { self }
+    
+    var name: String {
+        switch self {
+        case .hour: Translation.Project.projectRateTypeHour.val
+        case .day: Translation.Project.projectRateTypeDay.val
+        case .week: Translation.Project.projectRateTypeWeek.val
+        case .month: Translation.Project.projectRateTypeMonth.val
+        }
+    }
 }
 
 enum ProjectStatus: String {

@@ -9,10 +9,13 @@ import Foundation
 
 struct UpdateSessionRequest: Requestable {
     
+    let clientId: Int
+    let projectId: Int
     let sessionId: Int
     let start: Date?
     let end: Date?
-    var relativeURL: URL? { URL(string: "sessions/\(sessionId)") }
+    
+    var relativeURL: URL? { URL(string: "users/\(TickTockDefaults.shared.userId)/clients/\(clientId)/projects/\(projectId)/sessions/\(sessionId)") }
     var method: RequestMethod { .put }
     var query: RequestQuery? = nil
     var body: RequestBody? {
