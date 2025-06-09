@@ -1,6 +1,17 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "add_client_form_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please provide some details about your client"
+          }
+        }
+      }
+    },
     "add_client_navigation_title" : {
       "localizations" : {
         "en" : {
@@ -22,7 +33,44 @@
         }
       }
     },
-    "client_name_label" : {
+    "add_project_form_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please provide some details about the project"
+          }
+        }
+      }
+    },
+    "add_project_navigation_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add project"
+          }
+        }
+      }
+    },
+    "add_project_success_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have successfully created a new project"
+          }
+        }
+      }
+    },
+    "Charge frequency" : {
+
+    },
+    "client_label_name" : {
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -39,6 +87,49 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Client details"
+          }
+        }
+      }
+    },
+    "detail_project_navigation_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Project details"
+          }
+        }
+      }
+    },
+    "error_general_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oops… Something went wrong"
+          }
+        }
+      }
+    },
+    "general_button_close" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
+    "general_button_create" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create"
           }
         }
       }
@@ -151,6 +242,17 @@
         }
       }
     },
+    "general_success_navigation_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Success"
+          }
+        }
+      }
+    },
     "Hello %@ %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -171,9 +273,6 @@
           }
         }
       }
-    },
-    "Hello, Joe Tester!" : {
-
     },
     "home_button_add_client" : {
       "extractionState" : "manual",
@@ -252,6 +351,17 @@
         }
       }
     },
+    "list_project_navigation_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All projects"
+          }
+        }
+      }
+    },
     "login_form_description" : {
       "localizations" : {
         "en" : {
@@ -269,6 +379,72 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Login"
+          }
+        }
+      }
+    },
+    "project_label_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Project name"
+          }
+        }
+      }
+    },
+    "project_label_rate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate"
+          }
+        }
+      }
+    },
+    "project_rate_type_day" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "per day"
+          }
+        }
+      }
+    },
+    "project_rate_type_hour" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "per hour"
+          }
+        }
+      }
+    },
+    "project_rate_type_month" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "per month"
+          }
+        }
+      }
+    },
+    "project_rate_type_week" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "per week"
           }
         }
       }
@@ -294,9 +470,6 @@
           }
         }
       }
-    },
-    "Something went wrong" : {
-
     },
     "welcome_button_login" : {
       "extractionState" : "manual",
