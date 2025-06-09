@@ -12,7 +12,7 @@ struct ProjectDetailRequest: Requestable {
     let clientId: Int
     let projectId: Int
     
-    var relativeURL: URL? { URL(string: "users/\(TickTockDefaults.shared.userId)/clients/\(clientId)/projectsprojects/\(projectId)") }
+    var relativeURL: URL? { URL(string: "users/\(TickTockDefaults.shared.userId)/clients/\(clientId)/projects/\(projectId)") }
     var method: RequestMethod { .get}
     var query: RequestQuery?
     var body: RequestBody?
