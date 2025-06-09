@@ -12,6 +12,8 @@ struct GenericSuccessData: Hashable {
 }
 
 struct GenericSuccessScreen: View {
+    
+    @Environment(\.modalMode) var modalMode
     private let data: GenericSuccessData
 
     init(data: GenericSuccessData) {
@@ -19,10 +21,20 @@ struct GenericSuccessScreen: View {
     }
     
     var body: some View {
-        VStack(spacing: Spacing.interItem * 2) {
-            headerImage
-            headerText
+        VStack {
+            Spacer()
+            VStack(spacing: Spacing.interItem * 3) {
+                headerImage
+                headerText
+            }
+            .containerRelativeFrame(.vertical, alignment: .center) { size, _ in
+                size / 3
+            }
+            Spacer()
+            closeButton
         }
+        .padding(Spacing.interItem)
+        .navigationTitle(Translation.General.successNavTitle.val)
     }
 }
 
@@ -36,6 +48,13 @@ private extension GenericSuccessScreen {
     
     var headerText: some View {
         Text(data.message)
+    }
+    var closeButton: some View {
+        Button {
+            modalMode.wrappedValue = false 
+        } label: {
+            Text(Translation.General.buttonClose.val)
+        }
     }
 }
 

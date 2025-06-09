@@ -21,19 +21,19 @@ struct NavigatableView: View {
     var body: some View {
         NavigationStack(path: $coordinator.path) {
             ZStack {
-                Color.backgroundPrimary
+                Color.backgroundPrimary.ignoresSafeArea()
                 coordinator.buildScreen(root)
+                    .font(Font.body())
                     .navigationBarTitleDisplayMode(root.hasLargeTitles ? .large : .inline)
                     .navigationDestination(for: AppScreen.self) { screen in
                         coordinator.buildScreen(screen)
+                            .font(Font.body())
                             .navigationBarBackButtonHidden(screen.hidesBackButton)
                             .navigationBarTitleDisplayMode(screen.hasLargeTitles ? .large : .inline)
-                            .padding(Spacing.interItem)
                     }
                     .sheet(item: $coordinator.sheet) { sheet in
                         coordinator.buildSheet(sheet)
                     }
-                    .font(Font.body())
             }
         }
         .environmentObject(coordinator)
@@ -41,7 +41,7 @@ struct NavigatableView: View {
 }
 
 enum ToolBarButtonType: String {
-    case settings = "gearshape"
+    case settings = "gearshape.fill"
     case add = "plus"
     case edit = "pencil"
     case delete = "trash.fill"

@@ -42,6 +42,7 @@ struct LoginScreen: View {
         }
         .navigationTitle(Translation.Startup.loginNavTitle.val)
         .textFieldStyle(.roundedBorder)
+        .padding(Spacing.interItem)
     }
 }
 

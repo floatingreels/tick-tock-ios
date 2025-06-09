@@ -1,5 +1,5 @@
 //
-//  AddClientScreen.swift
+//  ClientCreateScreen.swift
 //  TickTock
 //
 //  Created by David Gunzburg on 29/05/2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddClientScreen: View {
+struct ClientCreateScreen: View {
     
     @EnvironmentObject private var coordinator: Coordinator
     @State private var companyName: String = ""
@@ -25,17 +25,18 @@ struct AddClientScreen: View {
         }
         .navigationTitle(Translation.Client.addClientNavTitle.val)
         .textFieldStyle(.roundedBorder)
+        .padding(Spacing.interItem)
     }
 }
 
-private extension AddClientScreen {
+private extension ClientCreateScreen {
         
     var headerImage: some View {
-        HeaderImageView(image: ("person.3.sequence.fill", true))
+        HeaderImageView(image: ("person.2.badge.plus.fill", true))
     }
     
     var headerText: some View {
-        Text(Translation.Startup.loginFormDescription.val)
+        Text(Translation.Client.addClientFormDescription.val)
     }
     
     var clientNameTextView: some View {
@@ -57,8 +58,7 @@ private extension AddClientScreen {
     
     var addClientButton: some View {
         Button(action: addClient) {
-            Text(String("Add client"))
-                .textContentType(.givenName)
+            Text(Translation.General.buttonCreate.val)  
         }
         .accentColor(.labelLinks)
         .disabled(!(isClientNameValid ?? false))
@@ -78,5 +78,5 @@ private extension AddClientScreen {
 }
 
 #Preview {
-    AddClientScreen()
+    ClientCreateScreen()
 }

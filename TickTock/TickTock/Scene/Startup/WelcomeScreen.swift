@@ -12,23 +12,19 @@ struct WelcomeScreen: View {
     @EnvironmentObject private var coordinator: Coordinator
     
     var body: some View {
-        ZStack {
-            Color(.backgroundPrimary)
-                .ignoresSafeArea()
-            VStack(spacing: Spacing.interItem * 3) {
-                VStack(spacing: Spacing.interItem) {
-                    headerImage
-                    headerText
-                }
-                HStack {
-                    Spacer()
-                    registerButton
-                    Spacer()
-                    loginButton
-                    Spacer()
-                }
-                .padding(Spacing.interItem)
+        VStack(spacing: Spacing.interItem * 3) {
+            VStack(spacing: Spacing.interItem) {
+                headerImage
+                headerText
             }
+            HStack {
+                Spacer()
+                registerButton
+                Spacer()
+                loginButton
+                Spacer()
+            }
+            .padding(Spacing.interItem)
         }
     }
 }

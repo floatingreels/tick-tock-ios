@@ -62,6 +62,7 @@ struct RegisterScreen: View {
             }
             .textFieldStyle(.roundedBorder)
             .navigationTitle(Translation.Startup.registerNavTitle.val)
+            .padding(Spacing.interItem)
     }
 }
 
@@ -187,7 +188,7 @@ private extension RegisterScreen {
         ) { [coordinator] response in
             switch response.result {
             case .success(_):
-                coordinator.push(.login)
+                coordinator.push(.home)
             case .failure(let error):
                 print(error.localizedDescription)
             }

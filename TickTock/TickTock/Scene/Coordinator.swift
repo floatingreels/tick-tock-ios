@@ -40,16 +40,19 @@ class Coordinator: ObservableObject {
         case .register: RegisterScreen()
         case .login: LoginScreen()
         case .home: HomeScreen()
-        case .addClient: AddClientScreen()
+        case .addClient: ClientCreateScreen()
         case .success(let data): GenericSuccessScreen(data: data)
-        case .listClients: ListClientsScreen()
+        case .listClients: ClientsListScreen()
+        case .detailClient(let data): ClientDetailScreen(clientDetailData: data)
+        case .addProject(let data): ProjectCreateScreen(projectCreateData: data)
+        case .listProjects(let data): ProjectsListScreen(projectsData: data)
         }
     }
     
     @ViewBuilder
     func buildSheet(_ sheet: AppScreen) -> some View {
         switch sheet {
-        case .addClient: AddClientScreen()
+        case .addClient: ClientCreateScreen()
         default: HomeScreen()
         }
     }

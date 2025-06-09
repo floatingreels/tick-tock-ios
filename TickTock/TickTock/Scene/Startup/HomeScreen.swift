@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct HomeScreen: View {
-
-    private let test = "Testing dismiss handler on sheet"
+    
+    private let testDismissLog = "Testing dismiss handler on sheet"
+    private let testClientId = 18
     @EnvironmentObject private var coordinator: Coordinator
     
     var body: some View {
@@ -18,7 +19,7 @@ struct HomeScreen: View {
                let last = TickTockDefaults.shared.lastName {
                 Text("Hello, \(first) \(last)!")
             } else {
-                Text(isPreview ? "Hello, Joe Tester!" : "Something went wrong")
+                Text(isPreview ? "Hello, Joe Tester!" : Translation.Error.general.val)
             }
             VStack(spacing: Spacing.interItem * 3) {
                 HStack(spacing: Spacing.interItem * 3) {
@@ -26,7 +27,7 @@ struct HomeScreen: View {
                     addClientButton
                 }
                 HStack(spacing: Spacing.interItem * 3) {
-                    newProjectButton
+                    listProjectsButton
                     newProjectButton
                 }
                 startSessionButton
@@ -38,6 +39,7 @@ struct HomeScreen: View {
             }
         }
         .navigationTitle(Translation.Startup.homeNavTitle.val)
+        .padding(Spacing.interItem)
     }
 }
 
@@ -69,9 +71,12 @@ private extension HomeScreen {
         .accentColor(.labelLinks)
     }
     var newProjectButton: some View {
-        Button(action: newProject) {
-            Text(Translation.Startup.buttonNewProject.val)
-        }
+        let data = ProjectCreateData(clientId: testClientId)
+        return NavigatableSheetPresenter(
+            navigatable: {
+                NavigatableView(root: .addProject(data))
+            },
+            label: Translation.Startup.buttonNewProject.val)
         .accentColor(.labelLinks)
     }
     
@@ -87,12 +92,8 @@ private extension HomeScreen {
     }
     
     func showProjectsList() {
-        print(#function)
-//        coordinator.push(.listProjects)
-    }
-    
-    func newProject() {
-        print(#function)
+        let data = ProjectsListData(clientId: testClientId)
+        coordinator.push(.listProjects(data))
     }
     
     func startSession() {
