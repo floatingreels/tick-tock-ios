@@ -135,7 +135,6 @@ final class BackendService {
     
     private func logResponseFailure(_ error: AFError) {
         var log = "ERROR\n"
-        log += "Error code: \(error.responseCode ?? 666)\n"
         log += "Error message: \(error.localizedDescription)"
         print(log)
     }
