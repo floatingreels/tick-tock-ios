@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-// A Navigation Link view with no destination (used for programmatic navigation)
 extension NavigationLink where Label == EmptyView, Destination == EmptyView {
     
+    // A Navigation Link view with no destination (used for programmatic navigation)
    static var empty: NavigationLink {
        self.init(destination: EmptyView(), label: { EmptyView() })
    }

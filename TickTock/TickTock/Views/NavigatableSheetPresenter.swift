@@ -36,14 +36,22 @@ struct NavigatableSheetPresenter<Navigatable: View>: View {
     var body: some View {
         if let label {
             buildLabelButton(label)
-                .sheet(isPresented: $isPresenting, onDismiss: dismissHandler) {
-                navigatable()
-            }
+                .sheet(
+                    isPresented: $isPresenting,
+                    onDismiss: dismissHandler
+                ) {
+                    navigatable()
+                        .environment(\.modalMode, self.$isPresenting)
+                }
         } else if let image {
             buildIconButton(image)
-            .sheet(isPresented: $isPresenting, onDismiss: dismissHandler) {
-                navigatable()
-            }
+                .sheet(
+                    isPresented: $isPresenting,
+                    onDismiss: dismissHandler
+                ) {
+                    navigatable()
+                        .environment(\.modalMode, self.$isPresenting)
+                }
         }
     }
 }
