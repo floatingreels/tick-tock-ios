@@ -80,10 +80,11 @@ private extension ProjectsListScreen {
     }
     
     func goToDetail(projectId: Int) {
-        print(#function)
+        let data = ProjectDetailData(clientId: projectsData.clientId, projectId: projectId)
+        coordinator.push(.detailProject(data))
     }
 }
 
 #Preview {
-    ProjectsListScreen(projectsData: ProjectsListData(clientId: 5))
+    ProjectsListScreen(projectsData: ProjectsListData(clientId: 2))
 }

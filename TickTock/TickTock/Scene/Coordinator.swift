@@ -46,6 +46,7 @@ class Coordinator: ObservableObject {
         case .detailClient(let data): ClientDetailScreen(clientDetailData: data)
         case .addProject(let data): ProjectCreateScreen(projectCreateData: data)
         case .listProjects(let data): ProjectsListScreen(projectsData: data)
+        case .detailProject(let data): ProjectDetailScreen(projectDetailData: data)
         }
     }
     
