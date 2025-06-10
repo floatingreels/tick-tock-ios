@@ -15,6 +15,7 @@ protocol Requestable {
 }
 
 public enum RequestMethod: String {
+    
     case get = "GET"
     case post = "POST"
     case put = "PUT"
@@ -45,15 +46,15 @@ final class BackendService {
                 return
             }
             AF.request(request)
-                .responseDecodable(of: responseType) { [weak self] response in
+                .responseDecodable(of: responseType) { [weak self] data in
                     guard let self else { return }
-                    switch response.result {
+                    switch data.result {
                     case .success(_):
-                        logResponseSuccess(code: response.response?.statusCode, bodyData: response.data)
+                        logResponseSuccess(code: data.response?.statusCode, bodyData: data.data)
                     case .failure(let error):
-                        logResponseFailure(error)
+                        logResponseFailure(error, code: data.response?.statusCode, bodyData: data.data)
                     }
-                    completion(response)
+                    completion(data)
                 }
         } catch {
             logRequestFailure()
@@ -133,8 +134,14 @@ final class BackendService {
         print(log)
     }
     
-    private func logResponseFailure(_ error: AFError) {
+    private func logResponseFailure(_ error: AFError, code: Int?, bodyData: Data? = nil) {
         var log = "ERROR\n"
+        if let code {
+            log += "Error code: \(code)\n"
+        }
+        if let bodyData, let bodyString = String(data: bodyData, encoding: .utf8)  {
+            log += "Error body: \(bodyString)\n"
+        }
         log += "Error message: \(error.localizedDescription)"
         print(log)
     }
