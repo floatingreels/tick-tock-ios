@@ -33,8 +33,7 @@ class Coordinator: ObservableObject {
         self.sheet = nil
     }
     
-    @ViewBuilder
-    func buildScreen(_ screen: AppScreen) -> some View {
+    @ViewBuilder func buildScreen(_ screen: AppScreen) -> some View {
         switch screen {
         case .welcome: WelcomeScreen()
         case .register: RegisterScreen()
@@ -50,8 +49,7 @@ class Coordinator: ObservableObject {
         }
     }
     
-    @ViewBuilder
-    func buildSheet(_ sheet: AppScreen) -> some View {
+    @ViewBuilder func buildSheet(_ sheet: AppScreen) -> some View {
         switch sheet {
         case .addClient: ClientCreateScreen()
         default: HomeScreen()
