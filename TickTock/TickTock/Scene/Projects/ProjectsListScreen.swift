@@ -13,6 +13,7 @@ struct ProjectsListData: Hashable {
 
 struct ProjectsListScreen: View {
     
+    @EnvironmentObject private var alertinator: Alertinator
     @EnvironmentObject private var coordinator: Coordinator
     @State private var projects: [Project] = []
     private let projectsData: ProjectsListData
@@ -68,13 +69,18 @@ private extension ProjectsListScreen {
     }
     
     func fetchProjects() {
-        requestManager.getProjects(clientId: projectsData.clientId) { data in
+        guard !isPreview else {
+            projects = buildTestProjectsList()
+            return
+        }
+        requestManager.getProjects(clientId: projectsData.clientId) { [alertinator] data in
             switch data.result {
             case .success(let response):
                 Task { @MainActor in
                     projects = response.projects
                 }
-            case .failure(_): fatalError()
+            case .failure(let error):
+                alertinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
             }
         }
     }
@@ -83,8 +89,16 @@ private extension ProjectsListScreen {
         let data = ProjectDetailData(clientId: projectsData.clientId, projectId: projectId)
         coordinator.push(.detailProject(data))
     }
+    
+    func buildTestProjectsList() -> [Project] {
+        [
+            Project(id: 2, clientId: 2, name: "Manhattan Project", rate: 12.33, rateTypeString: "hour", statusString: "active"),
+            Project(id: 3, clientId: 2, name: "Project X", rate: 111, rateTypeString: "week", statusString: "active"),
+            Project(id: 4, clientId: 2, name: "Projection Rate", rate: 0.0, rateTypeString: "hour", statusString: "active")
+        ]
+    }
 }
 
 #Preview {
-    ProjectsListScreen(projectsData: ProjectsListData(clientId: 2))
+    ProjectsListScreen(projectsData: ProjectsListData(clientId: Client.testClientId))
 }

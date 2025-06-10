@@ -13,7 +13,7 @@ struct ProjectCreateData: Hashable {
 
 struct ProjectCreateScreen: View {
     
-    private let testClientId = 9
+    @EnvironmentObject private var alertinator: Alertinator
     @EnvironmentObject private var coordinator: Coordinator
     @State private var projectName: String = ""
     @State private var isProjectNameValid: Bool? = nil
@@ -119,22 +119,22 @@ private extension ProjectCreateScreen {
     
     func addProject() {
         RequestManager.shared.addProject(
-            clientId: isPreview ? testClientId : projectCreateData.clientId,
+            clientId: isPreview ? Client.testClientId : projectCreateData.clientId,
             projectName: projectName,
             rate: rate,
             rateType: rateType
-        ) { [coordinator] response in
-            switch response.result {
+        ) { [alertinator, coordinator] data in
+            switch data.result {
             case .success:
-                let data = GenericSuccessData(message: Translation.Project.addProjectSuccessMessage.val)
-                coordinator.push(.success(data))
+                let success = GenericSuccessData(message: Translation.Project.addProjectSuccessMessage.val)
+                coordinator.push(.success(success))
             case .failure(let error):
-                print(error.localizedDescription)
+                alertinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
             }
         }
     }
 }
 
 #Preview {
-    ProjectCreateScreen(projectCreateData: ProjectCreateData(clientId: 9))
+    ProjectCreateScreen(projectCreateData: ProjectCreateData(clientId: Client.testClientId))
 }

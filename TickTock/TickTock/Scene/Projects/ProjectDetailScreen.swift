@@ -14,6 +14,7 @@ struct ProjectDetailData: Hashable {
 
 struct ProjectDetailScreen: View {
     
+    @EnvironmentObject private var alertinator: Alertinator
     @EnvironmentObject private var coordinator: Coordinator
     @State private var project: Project?
     private let projectDetailData: ProjectDetailData
@@ -39,27 +40,35 @@ struct ProjectDetailScreen: View {
 private extension ProjectDetailScreen {
     
     var headerImage: some View {
-        HeaderImageView(image: ("document.badge.plus.fill", true))
+        HeaderImageView(image: ("text.document.fill", true))
     }
     
     var headerText: some View {
-        Text(project?.name ?? Translation.Error.general.val)
+        Text(project?.name ?? Translation.Error.general_message.val)
     }
     
     func fetchProjectDetails() {
-        print(#function)
-        requestManager.getProjectDetail(clientId: projectDetailData.clientId, projectId: projectDetailData.projectId) { data in
+        guard !isPreview else {
+            project = buildTestProject()
+            return
+        }
+        requestManager.getProjectDetail(clientId: projectDetailData.clientId, projectId: projectDetailData.projectId) { [alertinator] data in
             switch data.result {
             case .success(let response):
                 Task { @MainActor in
                     project = response.project
                 }
-            case .failure(_): fatalError()
+            case .failure(let error):
+                alertinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
             }
         }
+    }
+    
+    func buildTestProject() -> Project {
+        Project(id: 2, clientId: 2, name: "Manhattan Project", rate: 12.33, rateTypeString: "hour", statusString: "active")
     }
 }
 
 #Preview {
-    ProjectDetailScreen(projectDetailData: ProjectDetailData(clientId: 1, projectId: 2))
+    ProjectDetailScreen(projectDetailData: ProjectDetailData(clientId: Client.testClientId, projectId: 2))
 }

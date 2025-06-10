@@ -13,6 +13,7 @@ struct ClientDetailData: Hashable {
 
 struct ClientDetailScreen: View {
     
+    @EnvironmentObject private var alertinator: Alertinator
     @EnvironmentObject private var coordinator: Coordinator
     @State private var client: Client?
     private let clientDetailData: ClientDetailData
@@ -42,23 +43,31 @@ private extension ClientDetailScreen {
     }
     
     var headerText: some View {
-        Text(client?.name ?? Translation.Error.general.val)
+        Text(client?.name ?? Translation.Error.general_message.val)
     }
     
     func fetchClientDetails() {
-        print(#function)
-        requestManager.getClientDetail(clientId: clientDetailData.clientId) { data in
+        guard !isPreview else {
+            client = buildTestClient()
+            return
+        }
+        requestManager.getClientDetail(clientId: clientDetailData.clientId) { [alertinator] data in
             switch data.result {
             case .success(let response):
                 Task { @MainActor in
                     client = response.client
                 }
-            case .failure(_): fatalError()
+            case .failure(let error):
+                alertinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
             }
         }
+    }
+    
+    func buildTestClient() -> Client {
+        Client(id: 4, name: "Pet Sematary", userId: TickTockDefaults.shared.userId)
     }
 }
 
 #Preview {
-    ClientsListScreen()
+    ClientDetailScreen(clientDetailData: ClientDetailData(clientId: Client.testClientId))
 }

@@ -12,6 +12,7 @@ typealias DismissHandler = () -> Void
 struct NavigatableView: View {
     
     @StateObject private var coordinator = Coordinator()
+    @StateObject private var alertinator = Alertinator()
     private var root: AppScreen
     
     init(root: AppScreen) {
@@ -34,9 +35,11 @@ struct NavigatableView: View {
                     .sheet(item: $coordinator.sheet) { sheet in
                         coordinator.buildSheet(sheet)
                     }
+                    .alert($alertinator.alert)
             }
         }
         .environmentObject(coordinator)
+        .environmentObject(alertinator)
     }
 }
 

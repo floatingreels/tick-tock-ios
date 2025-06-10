@@ -10,7 +10,7 @@ import SwiftUI
 struct HomeScreen: View {
     
     private let testDismissLog = "Testing dismiss handler on sheet"
-    private let testClientId = 18
+    @EnvironmentObject private var alertinator: Alertinator
     @EnvironmentObject private var coordinator: Coordinator
     
     var body: some View {
@@ -19,7 +19,7 @@ struct HomeScreen: View {
                let last = TickTockDefaults.shared.lastName {
                 Text("Hello, \(first) \(last)!")
             } else {
-                Text(isPreview ? "Hello, Joe Tester!" : Translation.Error.general.val)
+                Text(isPreview ? "Hello, Joe Tester!" : Translation.Error.general_message.val)
             }
             VStack(spacing: Spacing.interItem * 3) {
                 HStack(spacing: Spacing.interItem * 3) {
@@ -71,7 +71,7 @@ private extension HomeScreen {
         .accentColor(.labelLinks)
     }
     var newProjectButton: some View {
-        let data = ProjectCreateData(clientId: testClientId)
+        let data = ProjectCreateData(clientId: Client.testClientId)
         return NavigatableSheetPresenter(
             navigatable: {
                 NavigatableView(root: .addProject(data))
@@ -92,7 +92,7 @@ private extension HomeScreen {
     }
     
     func showProjectsList() {
-        let data = ProjectsListData(clientId: testClientId)
+        let data = ProjectsListData(clientId: Client.testClientId)
         coordinator.push(.listProjects(data))
     }
     

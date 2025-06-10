@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ClientCreateScreen: View {
     
+    @EnvironmentObject private var alertinator: Alertinator
     @EnvironmentObject private var coordinator: Coordinator
     @State private var companyName: String = ""
     @State private var isClientNameValid: Bool? = nil
@@ -65,13 +66,13 @@ private extension ClientCreateScreen {
     }
     
     func addClient() {
-        RequestManager.shared.addClient(companyName: companyName) { [coordinator] response in
-            switch response.result {
+        RequestManager.shared.addClient(companyName: companyName) { [alertinator, coordinator] data in
+            switch data.result {
             case .success:
-                let data = GenericSuccessData(message: Translation.Client.addClientSuccessMessage.val)
-                coordinator.push(.success(data))
+                let success = GenericSuccessData(message: Translation.Client.addClientSuccessMessage.val)
+                coordinator.push(.success(success))
             case .failure(let error):
-                print(error.localizedDescription)
+                alertinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
             }
         }
     }

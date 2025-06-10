@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LoginScreen: View {
     
+    @EnvironmentObject private var alertinator: Alertinator
     @EnvironmentObject private var coordinator: Coordinator
     
     @FocusState private var inFocus: InputField?
@@ -115,12 +116,12 @@ private extension LoginScreen {
         AuthManager.shared.performUserLogin(
             email: email,
             password: password
-        ) { [coordinator] response in
-            switch response.result {
+        ) { [alertinator, coordinator] data in
+            switch data.result {
             case .success:
                 coordinator.push(.home)
             case .failure(let error):
-                print(error.localizedDescription)
+                alertinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
             }
         }
     }

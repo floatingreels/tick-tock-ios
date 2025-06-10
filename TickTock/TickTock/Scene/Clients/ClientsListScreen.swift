@@ -10,6 +10,7 @@ import SwiftUI
 struct ClientsListScreen: View {
 
     @EnvironmentObject private var coordinator: Coordinator
+    @EnvironmentObject private var alertinator: Alertinator
     @State private var clients: [Client] = []
     private let requestManager = RequestManager.shared
     
@@ -58,14 +59,18 @@ private extension ClientsListScreen {
     }
     
     func fetchClients() {
-
-        requestManager.getClients() { data in
+        guard !isPreview else {
+            clients = buildTestClientsList()
+            return
+        }
+        requestManager.getClients() { [alertinator] data in
             switch data.result {
             case .success(let response):
                 Task { @MainActor in
                     clients = response.clients
                 }
-            case .failure(_): fatalError()
+            case .failure(let error):
+                alertinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
             }
         }
     }
@@ -73,6 +78,15 @@ private extension ClientsListScreen {
     func goToDetail(clientId: Int) {
         let data = ClientDetailData(clientId: clientId)
         coordinator.push(.detailClient(data))
+    }
+    
+    func buildTestClientsList() -> [Client] {
+        [
+            Client(id: 2, name: "Anicura", userId: TickTockDefaults.shared.userId),
+            Client(id: 3, name: "Den Boom", userId: TickTockDefaults.shared.userId),
+            Client(id: 4, name: "Pet Sematary", userId: TickTockDefaults.shared.userId),
+            Client(id: 5, name: "Dawg Life", userId: TickTockDefaults.shared.userId)
+        ]
     }
 }
 
