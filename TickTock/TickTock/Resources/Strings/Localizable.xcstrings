@@ -108,7 +108,29 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Oops… Something went wrong"
+            "value" : "Something went wrong"
+          }
+        }
+      }
+    },
+    "error_general_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oops… "
+          }
+        }
+      }
+    },
+    "general_button_cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
           }
         }
       }
@@ -141,6 +163,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Next"
+          }
+        }
+      }
+    },
+    "general_button_ok" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
           }
         }
       }

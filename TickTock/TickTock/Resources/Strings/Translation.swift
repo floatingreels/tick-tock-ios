@@ -13,7 +13,8 @@ enum Translation {}
 extension Translation {
     
     enum Error: String.LocalizationValue {
-        case general = "error_general_message"
+        case general_title = "error_general_title"
+        case general_message = "error_general_message"
         
         var val: String {
             let res = LocalizedStringResource(self.rawValue, table: "Localizable")
@@ -22,9 +23,11 @@ extension Translation {
     }
         
     enum General: String.LocalizationValue {
+        case buttonCancel = "general_button_cancel"
         case buttonClose = "general_button_close"
         case buttonCreate = "general_button_create"
         case buttonNext = "general_button_next"
+        case buttonOk = "general_button_ok"
         case emailValidation = "general_email_validation_message"
         case labelEmail = "general_label_email"
         case labelFirstName = "general_label_name_first"
