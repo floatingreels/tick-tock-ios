@@ -38,7 +38,7 @@ final class RequestManager {
         service.execute(request: request, completion: completion)
     }
     
-    func getProjects(clientId: Int, completion: @escaping @Sendable (AFDataResponse<GetProjectsResponse>) -> Void) {
+    func getProjects(clientId: Int?, completion: @escaping @Sendable (AFDataResponse<GetProjectsResponse>) -> Void) {
         let request = GetProjectsRequest(clientId: clientId)
         service.execute(request: request, completion: completion)
     }
