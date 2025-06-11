@@ -5,9 +5,7 @@
 //  Created by David Gunzburg on 09/06/2025.
 //
 
-import Foundation
 import SwiftUI
-import Alamofire
 
 class Alertinator: ObservableObject {
     

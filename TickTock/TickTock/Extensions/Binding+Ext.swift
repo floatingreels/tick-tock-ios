@@ -5,7 +5,6 @@
 //  Created by David Gunzburg on 10/06/2025.
 //
 
-import Foundation
 import SwiftUI
 
 extension Binding where Value == Bool {

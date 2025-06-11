@@ -5,7 +5,6 @@
 //  Created by David Gunzburg on 25/05/2025.
 //  Thanks to: https://www.swiftanytime.com/blog/coordinator-pattern-in-swiftui
 
-import Foundation
 import SwiftUI
 
 class Coordinator: ObservableObject {
