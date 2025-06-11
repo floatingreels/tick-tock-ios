@@ -80,6 +80,17 @@
         }
       }
     },
+    "detail_client_button_new_project" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start a new project"
+          }
+        }
+      }
+    },
     "detail_client_navigation_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -87,6 +98,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Client details"
+          }
+        }
+      }
+    },
+    "detail_client_projects_label" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Projects"
           }
         }
       }

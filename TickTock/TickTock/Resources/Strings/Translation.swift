@@ -70,8 +70,10 @@ extension Translation {
         case addClientSuccessMessage = "add_client_success_message"
         case addClientFormDescription = "add_client_form_description"
         case clientNameLabel = "client_label_name"
+        case detailClientNewProject = "detail_client_button_new_project"
         case listClientsNavTitle = "list_clients_navigation_title"
         case detailClientNavTitle = "detail_client_navigation_title"
+        case detailClientProjectsLabel = "detail_client_projects_label"
         
         var val: String {
             let res = LocalizedStringResource(self.rawValue, table: "Localizable")
