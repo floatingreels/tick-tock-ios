@@ -7,28 +7,28 @@
 
 import SwiftUI
 
-struct NavigatableListItem<Label: View>: View {
+struct NavigatableListItem<Content: View>: View {
     
     @Environment(\.colorScheme) var colorScheme
     
     private let action: () -> Void
-    private let label: () -> Label
+    private let content: () -> Content
     
-    init(action: @escaping () -> Void, @ViewBuilder label: @escaping () -> Label) {
+    init(action: @escaping () -> Void, @ViewBuilder content: @escaping () -> Content) {
         self.action = action
-        self.label = label
+        self.content = content
     }
     
     var body: some View {
         Button(action: action) {
             HStack(spacing: 0) {
-                label()
+                content()
                 Spacer()
                 NavigationLink.empty
-                    .layoutPriority(-1) // prioritize `label`
+                    .layoutPriority(-1)
             }
         }
-        .listRowBackground(Color.backgroundSecondary)
+        .listRowBackground(Color.backgroundCell)
         .tint(colorScheme == .dark ? .backgroundPrimary : .black)
     }
 }
