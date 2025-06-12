@@ -33,6 +33,16 @@
         }
       }
     },
+    "add_project_client_label" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clients"
+          }
+        }
+      }
+    },
     "add_project_form_description" : {
       "extractionState" : "manual",
       "localizations" : {

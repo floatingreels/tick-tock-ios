@@ -85,6 +85,7 @@ extension Translation {
         case addProjectNavTitle = "add_project_navigation_title"
         case addProjectSuccessMessage = "add_project_success_message"
         case addProjectFormDescription = "add_project_form_description"
+        case addProjectClientLabel = "add_project_client_label"
         case projectNameLabel = "project_label_name"
         case listProjectsNavTitle = "list_project_navigation_title"
         case detailProjectNavTitle = "detail_project_navigation_title"
