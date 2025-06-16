@@ -9,8 +9,6 @@ import SwiftUI
 
 struct NavigatableListItem<Content: View>: View {
     
-    @Environment(\.colorScheme) var colorScheme
-    
     private let action: () -> Void
     private let content: () -> Content
     
@@ -29,7 +27,7 @@ struct NavigatableListItem<Content: View>: View {
             }
         }
         .listRowBackground(Color.backgroundCell)
-        .tint(colorScheme == .dark ? .backgroundPrimary : .black)
+        .tint(.labelPrimary)
     }
 }
 
