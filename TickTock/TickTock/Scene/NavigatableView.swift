@@ -27,10 +27,13 @@ struct NavigatableView: View {
                     .font(Font.body())
                     .navigationBarTitleDisplayMode(root.hasLargeTitles ? .large : .inline)
                     .navigationDestination(for: AppScreen.self) { screen in
-                        coordinator.buildScreen(screen)
-                            .font(Font.body())
-                            .navigationBarBackButtonHidden(screen.hidesBackButton)
-                            .navigationBarTitleDisplayMode(screen.hasLargeTitles ? .large : .inline)
+                        ZStack {
+                            Color.backgroundPrimary.ignoresSafeArea()
+                            coordinator.buildScreen(screen)
+                                .font(Font.body())
+                                .navigationBarBackButtonHidden(screen.hidesBackButton)
+                                .navigationBarTitleDisplayMode(screen.hasLargeTitles ? .large : .inline)
+                        }
                     }
                     .sheet(item: $coordinator.sheet) { sheet in
                         coordinator.buildSheet(sheet)
