@@ -23,6 +23,14 @@ struct CustomAlert {
             actions: [AlertAction(title: Translation.General.buttonOk.val, completion: {})]
         )
     }
+    
+    static func generalError() -> CustomAlert {
+        CustomAlert(
+            title: Translation.Error.general_message.val,
+            message: Translation.Error.general_message.val,
+            actions: [AlertAction(title: Translation.General.buttonOk.val, completion: {})]
+        )
+    }
 }
 
 struct AlertAction: Identifiable {
