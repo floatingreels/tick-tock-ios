@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProjectCreateData: Hashable {
-    let clientId: Int
+    let clientId: Int?
 }
 
 struct ProjectCreateScreen: View {

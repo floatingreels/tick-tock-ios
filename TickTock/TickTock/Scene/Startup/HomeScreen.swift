@@ -71,7 +71,7 @@ private extension HomeScreen {
         .accentColor(.labelLinks)
     }
     var newProjectButton: some View {
-        let data = ProjectCreateData(clientId: Client.testClientId)
+        let data = ProjectCreateData(clientId: nil)
         return NavigatableSheetPresenter(
             navigatable: {
                 NavigatableView(root: .addProject(data))
@@ -92,7 +92,7 @@ private extension HomeScreen {
     }
     
     func showProjectsList() {
-        let data = ProjectsListData(clientId: Client.testClientId)
+        let data = ProjectsListData(clientId: nil)
         coordinator.push(.listProjects(data))
     }
     
