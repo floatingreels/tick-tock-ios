@@ -18,6 +18,14 @@ extension Font {
         }
     }
     
+    static func title2(weight: Font.Weight = .regular) -> Font {
+        return .appFont(ofSize: 22, weight: weight)
+    }
+    
+    static func title3(weight: Font.Weight = .regular) -> Font {
+        return .appFont(ofSize: 20, weight: weight)
+    }
+    
     static func body(weight: Font.Weight = .regular) -> Font {
         return .appFont(ofSize: 17, weight: weight)
     }
