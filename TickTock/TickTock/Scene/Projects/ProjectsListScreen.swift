@@ -23,27 +23,18 @@ struct ProjectsListScreen: View {
         self.projectsData = projectsData
     }
     
-    
     var body: some View {
         VStack(spacing: Spacing.interItem * 2) {
             headerImage
-            List(projects) { project in
-                NavigatableListItem(action: {
-                    goToDetail(projectId: project.id)
-                }, label: {
-                    Text(project.name)
-                })
-            }
-            .scrollContentBackground(.hidden)
+            projectsList
         }
-        .task {
-            fetchProjects()
-        }
+        .task { fetchProjects() }
         .toolbar {
             ToolbarItem {
                 toolBarButton
             }
         }
+        .padding(Spacing.interItem)
         .navigationTitle(Translation.Project.listProjectsNavTitle.val)
     }
 }
@@ -57,15 +48,16 @@ private extension ProjectsListScreen {
                 NavigatableView(root: .addProject(data))
             },
             image: (name: ToolBarButtonType.add.rawValue, isSystem: true),
-            dismissHandler: {
-                fetchProjects()
-            }
-        )
-        .accentColor(.labelLinks)
+            dismissHandler: fetchProjects)
+            .accentColor(.labelLinks)
     }
     
     var headerImage: some View {
         HeaderImageView(image: ("document.on.document.fill", true))
+    }
+    
+    var projectsList: some View  {
+        NavigatableList(items: projects, onSelection: goToDetail)
     }
     
     func fetchProjects() {
