@@ -14,23 +14,25 @@ struct HomeScreen: View {
     @EnvironmentObject private var coordinator: Coordinator
     
     var body: some View {
-        VStack(spacing: Spacing.interItem * 4) {
-            if let first =  TickTockDefaults.shared.firstName,
-               let last = TickTockDefaults.shared.lastName {
-                Text("Hello, \(first) \(last)!")
-            } else {
-                Text(isPreview ? "Hello, Joe Tester!" : Translation.Error.general_message.val)
-            }
-            VStack(spacing: Spacing.interItem * 3) {
-                HStack(spacing: Spacing.interItem * 3) {
-                    listClientsButton
-                    addClientButton
+        ScrollView {
+            VStack(spacing: Spacing.interItem * 4) {
+                if let first =  TickTockDefaults.shared.firstName,
+                   let last = TickTockDefaults.shared.lastName {
+                    Text("Hello, \(first) \(last)!")
+                } else {
+                    Text(isPreview ? "Hello, Joe Tester!" : Translation.Error.general_message.val)
                 }
-                HStack(spacing: Spacing.interItem * 3) {
-                    listProjectsButton
-                    newProjectButton
+                VStack(spacing: Spacing.interItem * 3) {
+                    HStack(spacing: Spacing.interItem * 3) {
+                        listClientsButton
+                        addClientButton
+                    }
+                    HStack(spacing: Spacing.interItem * 3) {
+                        listProjectsButton
+                        newProjectButton
+                    }
+                    startSessionButton
                 }
-                startSessionButton
             }
         }
         .toolbar {
