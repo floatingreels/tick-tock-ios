@@ -25,15 +25,20 @@ struct ProjectDetailScreen: View {
     }
     
     var body: some View {
-        VStack(spacing: Spacing.interItem * 2) {
-            headerImage
-            headerText
+        ScrollView {
+            VStack(alignment: .leading, spacing: Spacing.interItem * 2) {
+                CenteredHStack {
+                    VStack(alignment: .center, spacing: Spacing.interItem) {
+                        headerImage
+                        headerText
+                    }
+                }
+            }
+            .padding(Spacing.interItem)
+            .containerRelativeFrame([.horizontal, .vertical], alignment: .topLeading)
         }
-        .task {
-            fetchProjectDetails()
-        }
+        .task { fetchProjectDetails() }
         .navigationTitle(Translation.Project.detailProjectNavTitle.val)
-        .padding(Spacing.interItem)
     }
 }
 
@@ -48,10 +53,6 @@ private extension ProjectDetailScreen {
     }
     
     func fetchProjectDetails() {
-        guard !isPreview else {
-            project = buildTestProject()
-            return
-        }
         requestManager.getProjectDetail(clientId: projectDetailData.clientId, projectId: projectDetailData.projectId) { [alertinator] data in
             switch data.result {
             case .success(let response):
