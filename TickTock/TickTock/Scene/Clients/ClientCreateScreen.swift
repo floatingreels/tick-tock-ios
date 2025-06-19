@@ -16,12 +16,20 @@ struct ClientCreateScreen: View {
     
     var body: some View {
         VStack(spacing: Spacing.interItem * 2) {
-            headerImage
-            headerText
-            VStack(spacing: Spacing.interItem / 2) {
+            CenteredHStack {
+                VStack(alignment: .center, spacing: Spacing.interItem) {
+                    headerImage
+                    headerText
+                }
+            }
+            
+            VStack(alignment: .leading, spacing: Spacing.interItem) {
+                clientNameLabel
                 clientNameTextView
             }
-            addClientButton
+            CenteredHStack {
+                addClientButton
+            }
             Spacer()
         }
         .navigationTitle(Translation.Client.addClientNavTitle.val)
@@ -37,6 +45,10 @@ private extension ClientCreateScreen {
     
     var headerText: some View {
         Text(Translation.Client.addClientFormDescription.val)
+    }
+    
+    var clientNameLabel: some View {
+        Text(Translation.Client.clientNameLabel.val).bold()
     }
     
     var clientNameTextView: some View {
