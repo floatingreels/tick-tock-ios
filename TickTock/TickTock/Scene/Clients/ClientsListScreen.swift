@@ -8,24 +8,16 @@
 import SwiftUI
 
 struct ClientsListScreen: View {
-
+    
     @EnvironmentObject private var coordinator: Coordinator
     @EnvironmentObject private var alertinator: Alertinator
     @State private var clients: [Client] = []
     private let requestManager = RequestManager.shared
     
     var body: some View {
-        VStack(spacing: Spacing.interItem * 2) {
+        VStack(spacing: Spacing.interItem) {
             headerImage
-            List(clients) { client in
-                NavigatableListItem(action: {
-                    goToDetail(clientId: client.id)
-                }, label: {
-                    Text(client.name)
-                })
-            }
-            .listStyle(.insetGrouped)
-            .scrollContentBackground(.hidden)
+            clientsList
         }
         .task {
             fetchClients()
@@ -35,6 +27,7 @@ struct ClientsListScreen: View {
                 toolBarButton
             }
         }
+        .padding(.horizontal, Spacing.interItem)
         .navigationTitle(Translation.Client.listClientsNavTitle.val)
     }
 }
@@ -55,7 +48,11 @@ private extension ClientsListScreen {
     }
     
     var headerImage: some View {
-        HeaderImageView(image: ("person.3.sequence.fill", true))
+        HeaderImageView(image: ("person.2.fill", true))
+    }
+    
+    var clientsList: some View  {
+        NavigatableList(items: clients, onSelection: goToDetail)
     }
     
     func fetchClients() {
@@ -82,10 +79,10 @@ private extension ClientsListScreen {
     
     func buildTestClientsList() -> [Client] {
         [
-            Client(id: 2, name: "Anicura", userId: TickTockDefaults.shared.userId),
-            Client(id: 3, name: "Den Boom", userId: TickTockDefaults.shared.userId),
-            Client(id: 4, name: "Pet Sematary", userId: TickTockDefaults.shared.userId),
-            Client(id: 5, name: "Dawg Life", userId: TickTockDefaults.shared.userId)
+            Client(id: 2, name: "Anicura", projects: [], userId: TickTockDefaults.shared.userId),
+            Client(id: 3, name: "Den Boom", projects: [], userId: TickTockDefaults.shared.userId),
+            Client(id: 4, name: "Pet Sematary", projects: [], userId: TickTockDefaults.shared.userId),
+            Client(id: 5, name: "Dawg Life", projects: [], userId: TickTockDefaults.shared.userId)
         ]
     }
 }
