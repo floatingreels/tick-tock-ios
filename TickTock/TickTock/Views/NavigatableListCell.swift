@@ -1,5 +1,5 @@
 //
-//  NavigatableListItem.swift
+//  NavigatableListCell.swift
 //  TickTock
 //
 //  Created by David Gunzburg on 05/06/2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NavigatableListItem<Content: View>: View {
+struct NavigatableListCell<Content: View>: View {
     
     private let action: () -> Void
     private let content: () -> Content
@@ -32,7 +32,7 @@ struct NavigatableListItem<Content: View>: View {
 }
 
 #Preview {
-    NavigatableListItem(action: { print() }) {
-        Text("Cell text here")
+    NavigatableListCell(action: { print() }) {
+        Text("Some item")
     }
 }
