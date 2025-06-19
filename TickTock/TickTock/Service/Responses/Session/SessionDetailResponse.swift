@@ -7,7 +7,10 @@
 
 import Foundation
 
-struct SessionDetailResponse: Codable {
+struct SessionDetailResponse: Respondable, Codable {
+    
+    let success: Bool
+    let message: String?
     let session: Session
 }
 

@@ -6,7 +6,9 @@
 //
 
 
-struct AddSessionResponse: Codable {
+struct AddSessionResponse: Respondable, Codable {
     
+    let success: Bool
+    let message: String?
     let sessionId: Int
 }

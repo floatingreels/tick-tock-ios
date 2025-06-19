@@ -7,7 +7,10 @@
 
 import Foundation
 
-struct RegistrationResponse: Codable {
+struct RegistrationResponse: Respondable, Codable {
+    
+    let success: Bool
+    let message: String?
     let user: User
     let token: String
 }

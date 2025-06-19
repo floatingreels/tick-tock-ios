@@ -5,7 +5,9 @@
 //  Created by David Gunzburg on 30/05/2025.
 //
 
-struct AddClientResponse: Codable {
+ struct AddClientResponse: Respondable, Codable {
     
+    let success: Bool
+    let message: String?
     let clientId: Int
 }

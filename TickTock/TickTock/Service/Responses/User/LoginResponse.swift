@@ -5,7 +5,9 @@
 //  Created by David Gunzburg on 23/05/2025.
 //
 
-struct LoginResponse: Codable {
+struct LoginResponse: Respondable, Codable {
+    let success: Bool
+    let message: String?
     let user: User
     let token: String
 }
