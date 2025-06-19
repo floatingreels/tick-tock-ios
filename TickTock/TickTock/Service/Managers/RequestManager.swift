@@ -48,8 +48,8 @@ final class RequestManager {
         service.execute(request: request, completion: completion)
     }
     
-    func getProjectDetail(clientId: Int, projectId: Int, completion: @escaping @Sendable (AFDataResponse<ProjectDetailResponse>) -> Void) {
-        let request = ProjectDetailRequest(clientId: clientId, projectId: projectId)
+    func getProjectDetail(projectId: Int, completion: @escaping @Sendable (AFDataResponse<ProjectDetailResponse>) -> Void) {
+        let request = ProjectDetailRequest(projectId: projectId)
         service.execute(request: request, completion: completion)
     }
     

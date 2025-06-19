@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ProjectDetailData: Hashable {
-    let clientId: Int
     let projectId: Int
 }
 
@@ -53,7 +52,7 @@ private extension ProjectDetailScreen {
     }
     
     func fetchProjectDetails() {
-        requestManager.getProjectDetail(clientId: projectDetailData.clientId, projectId: projectDetailData.projectId) { [alertinator] data in
+        requestManager.getProjectDetail(projectId: projectDetailData.projectId) { [alertinator] data in
             switch data.result {
             case .success(let response):
                 Task { @MainActor in
@@ -71,5 +70,5 @@ private extension ProjectDetailScreen {
 }
 
 #Preview {
-    ProjectDetailScreen(projectDetailData: ProjectDetailData(clientId: Client.testClientId, projectId: 2))
+    ProjectDetailScreen(projectDetailData: ProjectDetailData(projectId: 2))
 }

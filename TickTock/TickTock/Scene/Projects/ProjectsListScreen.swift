@@ -78,7 +78,7 @@ private extension ProjectsListScreen {
     }
     
     func goToDetail(projectId: Int) {
-        let data = ProjectDetailData(clientId: projectsData.clientId, projectId: projectId)
+        let data = ProjectDetailData(projectId: projectId)
         coordinator.push(.detailProject(data))
     }
     

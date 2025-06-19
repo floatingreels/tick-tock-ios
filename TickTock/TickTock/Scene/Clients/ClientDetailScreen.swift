@@ -99,7 +99,7 @@ private extension ClientDetailScreen {
     }
         
     func goToProjectDetail(projectId: Int) {
-        let data = ProjectDetailData(clientId: clientDetailData.clientId, projectId: projectId)
+        let data = ProjectDetailData(projectId: projectId)
         coordinator.push(.detailProject(data))
     }
     
