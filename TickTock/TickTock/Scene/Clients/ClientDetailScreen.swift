@@ -24,15 +24,30 @@ struct ClientDetailScreen: View {
     }
     
     var body: some View {
-        VStack(spacing: Spacing.interItem * 2) {
-            headerImage
-            headerText
+        ScrollView {
+            VStack(spacing: Spacing.interItem * 2) {
+                CenteredHStack {
+                    VStack(alignment: .center, spacing: Spacing.interItem) {
+                        headerImage
+                        headerText
+                    }
+                }
+                VStack(alignment: .leading, spacing: Spacing.interItem) {
+                    projectsLabel
+                    if let projects = client?.projects, !projects.isEmpty {
+                        projectsList
+                            .listStyle(.insetGrouped)
+                            .scrollContentBackground(.hidden)
+                    }
+                    newProjectButton
+                }
+                Spacer()
+            }
+            .padding(Spacing.interItem)
+            .containerRelativeFrame([.horizontal, .vertical], alignment: .topLeading)
         }
-        .task {
-            fetchClientDetails()
-        }
+        .task { fetchClientDetails() }
         .navigationTitle(Translation.Client.detailClientNavTitle.val)
-        .padding(Spacing.interItem)
     }
 }
 
@@ -44,6 +59,26 @@ private extension ClientDetailScreen {
     
     var headerText: some View {
         Text(client?.name ?? Translation.Error.general_message.val)
+    }
+    
+    var projectsLabel: some View {
+        Text(Translation.Client.detailClientProjectsLabel.val)
+    }
+    
+    var projectsList: some View {
+        NavigatableList(items: client?.projects ?? [], onSelection: goToProjectDetail)
+    }
+    
+    var newProjectButton: some View {
+        let data = ProjectCreateData(clientId: clientDetailData.clientId)
+        return NavigatableSheetPresenter(
+            navigatable: {
+                NavigatableView(root: .addProject(data))
+            },
+            label: Translation.Client.detailClientNewProject.val,
+            dismissHandler: fetchClientDetails
+        )
+        .accentColor(.labelLinks)
     }
     
     func fetchClientDetails() {
@@ -62,9 +97,14 @@ private extension ClientDetailScreen {
             }
         }
     }
+        
+    func goToProjectDetail(projectId: Int) {
+        let data = ProjectDetailData(clientId: clientDetailData.clientId, projectId: projectId)
+        coordinator.push(.detailProject(data))
+    }
     
     func buildTestClient() -> Client {
-        Client(id: 4, name: "Pet Sematary", userId: TickTockDefaults.shared.userId)
+        Client(id: 4, name: "Pet Sematary", projects: [], userId: TickTockDefaults.shared.userId)
     }
 }
 
