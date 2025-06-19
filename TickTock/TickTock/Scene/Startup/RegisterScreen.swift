@@ -61,7 +61,6 @@ struct RegisterScreen: View {
                 signupButton
                 Spacer()
             }
-            .textFieldStyle(.roundedBorder)
             .navigationTitle(Translation.Startup.registerNavTitle.val)
             .padding(Spacing.interItem)
     }

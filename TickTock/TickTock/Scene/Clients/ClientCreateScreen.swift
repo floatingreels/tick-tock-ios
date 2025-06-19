@@ -25,7 +25,6 @@ struct ClientCreateScreen: View {
             Spacer()
         }
         .navigationTitle(Translation.Client.addClientNavTitle.val)
-        .textFieldStyle(.roundedBorder)
         .padding(Spacing.interItem)
     }
 }

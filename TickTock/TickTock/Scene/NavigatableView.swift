@@ -24,13 +24,11 @@ struct NavigatableView: View {
             ZStack {
                 Color.backgroundPrimary.ignoresSafeArea()
                 coordinator.buildScreen(root)
-                    .font(Font.body())
                     .navigationBarTitleDisplayMode(root.hasLargeTitles ? .large : .inline)
                     .navigationDestination(for: AppScreen.self) { screen in
                         ZStack {
                             Color.backgroundPrimary.ignoresSafeArea()
                             coordinator.buildScreen(screen)
-                                .font(Font.body())
                                 .navigationBarBackButtonHidden(screen.hidesBackButton)
                                 .navigationBarTitleDisplayMode(screen.hasLargeTitles ? .large : .inline)
                         }
@@ -41,6 +39,8 @@ struct NavigatableView: View {
                     .alert($alertinator.alert)
             }
         }
+        .font(Font.body())
+        .textFieldStyle(.roundedBorder)
         .environmentObject(coordinator)
         .environmentObject(alertinator)
     }

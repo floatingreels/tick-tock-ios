@@ -48,7 +48,6 @@ struct ProjectCreateScreen: View {
             Spacer()
         }
         .navigationTitle(Translation.Project.addProjectNavTitle.val)
-        .textFieldStyle(.roundedBorder)
         .padding(Spacing.interItem)
     }
 }
