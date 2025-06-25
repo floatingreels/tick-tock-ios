@@ -19,7 +19,6 @@ final class BackendService {
     
     func execute<T>(
         request: Requestable,
-        responseType: T.Type = T.self,
         completion: @escaping @Sendable (AFDataResponse<T>) -> Void
     ) where T: Codable, T: Sendable {
         do {
@@ -29,7 +28,7 @@ final class BackendService {
                 return
             }
             AF.request(request)
-                .responseDecodable(of: responseType) { [weak self] data in
+                .responseDecodable(of: T.self) { [weak self] data in
                     guard let self else { return }
                     switch data.result {
                     case .success(_):

@@ -19,5 +19,5 @@ extension EnvironmentValues {
 }
 
 struct ModalModeKey: EnvironmentKey {
-    static let defaultValue = Binding<Bool>.constant(false) // < required
+    static let defaultValue = Binding<Bool>.constant(false)
 }
