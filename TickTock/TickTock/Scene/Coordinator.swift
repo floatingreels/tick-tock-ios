@@ -7,10 +7,11 @@
 
 import SwiftUI
 
-class Coordinator: ObservableObject {
+@Observable
+final class Coordinator {
     
-    @Published var path = NavigationPath()
-    @Published var sheet: AppScreen?
+    var path = NavigationPath()
+    var sheet: AppScreen?
     
     func push(_ screen: AppScreen) {
         path.append(screen)
@@ -41,10 +42,10 @@ class Coordinator: ObservableObject {
         case .addClient: ClientCreateScreen()
         case .success(let data): GenericSuccessScreen(data: data)
         case .listClients: ClientsListScreen()
-        case .detailClient(let data): ClientDetailScreen(clientDetailData: data)
-        case .addProject(let data): ProjectCreateScreen(projectCreateData: data)
-        case .listProjects(let data): ProjectsListScreen(projectsData: data)
-        case .detailProject(let data): ProjectDetailScreen(projectDetailData: data)
+        case .detailClient: ClientDetailScreen()
+        case .addProject: ProjectCreateScreen()
+        case .listProjects: ProjectsListScreen()
+        case .detailProject: ProjectDetailScreen()
         }
     }
     

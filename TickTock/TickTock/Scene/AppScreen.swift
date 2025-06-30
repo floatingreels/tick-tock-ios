@@ -12,10 +12,10 @@ enum AppScreen: Hashable, Identifiable {
     case home
     case addClient
     case listClients
-    case detailClient(ClientDetailData)
-    case addProject(ProjectCreateData)
-    case listProjects(ProjectsListData)
-    case detailProject(ProjectDetailData)
+    case detailClient
+    case addProject
+    case listProjects
+    case detailProject
     case success(GenericSuccessData)
     
     var id: String { String(describing: self) }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 typealias DismissHandler = () -> Void
+typealias PresentHandler = () -> Void
 
 struct NavigatableView: View {
     
