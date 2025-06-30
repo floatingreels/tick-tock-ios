@@ -21,6 +21,7 @@ final class Size {
 }
 
 final class Height {
+    static let listItem: CGFloat = 44
     static let actionButton: CGFloat = 48
     static let estimatedTextInputField: CGFloat = 52
     static let progressBar: CGFloat = 8
