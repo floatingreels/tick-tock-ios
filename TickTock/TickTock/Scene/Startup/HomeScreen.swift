@@ -13,7 +13,6 @@ struct HomeScreen: View {
     @Environment(AuthStore.self) private var authStore
     @Environment(ProjectStore.self) private var projectStore
     @Environment(ClientStore.self) private var clientStore
-    @Environment(Alertinator.self) private var alertinator
     @Environment(Coordinator.self) private var coordinator
     
     var body: some View {
@@ -96,7 +95,7 @@ private extension HomeScreen {
     func didPressClientsList() {
         clientStore.getAllClients { error in
             if let error {
-                alertinator.presentAlert(error)
+                coordinator.presentAlert(error)
             } else {
                 coordinator.push(.listClients)
             }
@@ -110,7 +109,7 @@ private extension HomeScreen {
     func showProjectsList() {
         projectStore.getAllProjects { error in
             if let error {
-                alertinator.presentAlert(error)
+                coordinator.presentAlert(error)
             } else {
                 coordinator.push(.listProjects)
             }

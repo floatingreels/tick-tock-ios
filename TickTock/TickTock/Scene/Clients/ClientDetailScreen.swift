@@ -11,7 +11,6 @@ struct ClientDetailScreen: View {
     
     @Environment(ClientStore.self) private var clientStore
     @Environment(ProjectStore.self) private var projectStore
-    @Environment(Alertinator.self) private var alertinator
     @Environment(Coordinator.self) private var coordinator
     
     var body: some View {
@@ -72,7 +71,7 @@ private extension ClientDetailScreen {
     func didSelectProject(projectId: Int) {
         projectStore.getProjectDetail(projectId: projectId) { error in
             if let error {
-                alertinator.presentAlert(error)
+                coordinator.presentAlert(error)
             } else {
                 coordinator.push(.detailProject)
             }

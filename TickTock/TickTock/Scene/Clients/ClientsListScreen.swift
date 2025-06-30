@@ -10,7 +10,6 @@ import SwiftUI
 struct ClientsListScreen: View {
     
     @Environment(Coordinator.self) private var coordinator
-    @Environment(Alertinator.self) private var alertinator
     @Environment(ClientStore.self) private var clientStore
     
     var body: some View {
@@ -50,7 +49,7 @@ private extension ClientsListScreen {
     func didSelectClient(clientId: Int) {
         clientStore.getClientDetail(clientId: clientId) { error in
             if let error {
-                alertinator.presentAlert(error)
+                coordinator.presentAlert(error)
             } else {
                 coordinator.push(.detailClient)
             }

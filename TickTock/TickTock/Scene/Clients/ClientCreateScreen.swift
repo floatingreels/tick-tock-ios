@@ -10,7 +10,6 @@ import SwiftUI
 struct ClientCreateScreen: View {
     
     @Environment(ClientStore.self) private var clientStore
-    @Environment(Alertinator.self) private var alertinator
     @Environment(Coordinator.self) private var coordinator
     @State private var companyName: String = ""
     @State private var isClientNameValid: Bool? = nil
@@ -79,7 +78,7 @@ private extension ClientCreateScreen {
     func didPressAddClient() {
         clientStore.addClient(companyName: companyName) { error in
             if let error {
-                alertinator.presentAlert(error)
+                coordinator.presentAlert(error)
             } else {
                 let success = GenericSuccessData(message: Translation.Client.addClientSuccessMessage.val)
                 coordinator.push(.success(success))

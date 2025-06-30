@@ -11,7 +11,6 @@ struct ProjectsListScreen: View {
     
     @Environment(ClientStore.self) private var clientStore
     @Environment(ProjectStore.self) private var projectStore
-    @Environment(Alertinator.self) private var alertinator
     @Environment(Coordinator.self) private var coordinator
     
     var body: some View {
@@ -52,7 +51,7 @@ private extension ProjectsListScreen {
     func didSelectProject(projectId: Int) {
         projectStore.getProjectDetail(projectId: projectId) { error in
             if let error {
-                alertinator.presentAlert(error)
+                coordinator.presentAlert(error)
             } else {
                 coordinator.push(.detailProject)
             }
@@ -68,7 +67,6 @@ private extension ProjectsListScreen {
     ProjectsListScreen()
         .environment(ClientStore(requestManager: RequestManager.shared))
         .environment(ProjectStore(requestManager: RequestManager.shared))
-        .environment(Alertinator())
         .environment(Coordinator())
 }
 

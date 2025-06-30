@@ -11,7 +11,6 @@ struct ProjectCreateScreen: View {
     
     @Environment(StoreManager.self) private var storeManager
     @Environment(ClientStore.self) private var clientStore
-    @Environment(Alertinator.self) private var alertinator
     @Environment(Coordinator.self) private var coordinator
     @State private var clientId: Int?
     @State private var projectName: String = ""
@@ -168,7 +167,7 @@ private extension ProjectCreateScreen {
     
     func didPressAddProject() {
         guard let clientId = getClientId() else {
-            alertinator.presentAlert(CustomAlert.generalError())
+            coordinator.presentAlert(CustomAlert.generalError())
             return
         }
         storeManager.addProject(
@@ -178,7 +177,7 @@ private extension ProjectCreateScreen {
             rateType: rateType
         ) { error in
             if let error {
-                alertinator.presentAlert(error)
+                coordinator.presentAlert(error)
             } else {
                 let success = GenericSuccessData(message: Translation.Project.addProjectSuccessMessage.val)
                 coordinator.push(.success(success))

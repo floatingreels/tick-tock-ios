@@ -12,8 +12,7 @@ typealias PresentHandler = () -> Void
 
 struct NavigatableView: View {
     
-    @StateObject private var coordinator = Coordinator()
-    @StateObject private var alertinator = Alertinator()
+    @State private var coordinator = Coordinator() 
     private var root: AppScreen
     
     init(root: AppScreen) {
@@ -37,13 +36,12 @@ struct NavigatableView: View {
                     .sheet(item: $coordinator.sheet) { sheet in
                         coordinator.buildSheet(sheet)
                     }
-                    .alert($alertinator.alert)
+                    .alert($coordinator.alert)
             }
         }
         .font(Font.body())
         .textFieldStyle(.roundedBorder)
-        .environmentObject(coordinator)
-        .environmentObject(alertinator)
+        .environment(coordinator)
     }
 }
 

@@ -14,7 +14,6 @@ enum InputField {
 struct RegisterScreen: View {
     
     @Environment(AuthStore.self) private var authStore
-    @Environment(Alertinator.self) private var alertinator
     @Environment(Coordinator.self) private var coordinator
     
     @State private var firstName: String = ""
@@ -187,12 +186,12 @@ private extension RegisterScreen {
             lastName: lastName,
             email: email,
             password: password
-        ) { [alertinator, coordinator] data in
+        ) { [coordinator] data in
             switch data.result {
             case .success(_):
                 coordinator.push(.home)
             case .failure(let error):
-                alertinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
+                coordinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
             }
         }
     }

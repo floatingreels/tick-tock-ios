@@ -10,7 +10,6 @@ import SwiftUI
 struct ProjectDetailScreen: View {
     
     @Environment(ProjectStore.self) private var projectStore
-    @Environment(Alertinator.self) private var alertinator
     @Environment(Coordinator.self) private var coordinator
     
     var body: some View {
