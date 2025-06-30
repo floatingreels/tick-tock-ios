@@ -7,21 +7,11 @@
 
 import SwiftUI
 
-struct ProjectDetailData: Hashable {
-    let projectId: Int
-}
-
 struct ProjectDetailScreen: View {
     
-    @EnvironmentObject private var alertinator: Alertinator
-    @EnvironmentObject private var coordinator: Coordinator
-    @State private var project: Project?
-    private let projectDetailData: ProjectDetailData
-    private let requestManager = RequestManager.shared
-    
-    init(projectDetailData: ProjectDetailData) {
-        self.projectDetailData = projectDetailData
-    }
+    @Environment(ProjectStore.self) private var projectStore
+    @Environment(Alertinator.self) private var alertinator
+    @Environment(Coordinator.self) private var coordinator
     
     var body: some View {
         ScrollView {
@@ -36,7 +26,6 @@ struct ProjectDetailScreen: View {
             .padding(Spacing.interItem)
             .containerRelativeFrame([.horizontal, .vertical], alignment: .topLeading)
         }
-        .task { fetchProjectDetails() }
         .navigationTitle(Translation.Project.detailProjectNavTitle.val)
     }
 }
@@ -48,27 +37,6 @@ private extension ProjectDetailScreen {
     }
     
     var headerText: some View {
-        Text(project?.name ?? Translation.Error.general_message.val)
+        Text(projectStore.project?.name ?? Translation.Error.general_message.val)
     }
-    
-    func fetchProjectDetails() {
-        requestManager.getProjectDetail(projectId: projectDetailData.projectId) { [alertinator] data in
-            switch data.result {
-            case .success(let response):
-                Task { @MainActor in
-                    project = response.project
-                }
-            case .failure(let error):
-                alertinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
-            }
-        }
-    }
-    
-    func buildTestProject() -> Project {
-        Project(id: 2, clientId: 2, name: "Manhattan Project", rate: 12.33, rateTypeString: "hour", statusString: "active")
-    }
-}
-
-#Preview {
-    ProjectDetailScreen(projectDetailData: ProjectDetailData(projectId: 2))
 }

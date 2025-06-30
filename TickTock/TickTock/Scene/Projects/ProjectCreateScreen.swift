@@ -7,25 +7,17 @@
 
 import SwiftUI
 
-struct ProjectCreateData: Hashable {
-    let clientId: Int?
-}
-
 struct ProjectCreateScreen: View {
     
-    @EnvironmentObject private var alertinator: Alertinator
-    @EnvironmentObject private var coordinator: Coordinator
+    @Environment(StoreManager.self) private var storeManager
+    @Environment(ClientStore.self) private var clientStore
+    @Environment(Alertinator.self) private var alertinator
+    @Environment(Coordinator.self) private var coordinator
+    @State private var clientId: Int?
     @State private var projectName: String = ""
     @State private var isProjectNameValid: Bool? = nil
-    @State private var clients: [Client] = []
     @State private var rate: Double = 0
     @State private var rateType: RateType = .hour
-    @State private var clientId: Int?
-    private let projectCreateData: ProjectCreateData
-    
-    init(projectCreateData: ProjectCreateData) {
-        self.projectCreateData = projectCreateData
-    }
     
     var body: some View {
         ScrollView {
@@ -40,9 +32,9 @@ struct ProjectCreateScreen: View {
                     projectNameLabel
                     projectNameTextView
                 }
-                if projectCreateData.clientId == nil {
+                if clientStore.client == nil {
                     VStack(alignment: .leading, spacing: Spacing.interItem) {
-                        switch clients.count {
+                        switch clientStore.clients.count {
                         case 0, 1:
                             clientsLabel
                             addClientButton
@@ -53,11 +45,6 @@ struct ProjectCreateScreen: View {
                                 addClientButton
                             }
                             clientsList
-                        }
-                    }
-                    .task {
-                        if clientId == nil {
-                            getClients()
                         }
                     }
                 }
@@ -96,24 +83,30 @@ private extension ProjectCreateScreen {
     
     var clientsLabel: some View {
         let label = Translation.Project.addProjectClientLabel.val
-        guard let id = clientId, let client = clients.first(where: { $0.id == id })  else  {
+        if clientStore.clients.count == 1 {
+            clientId = clientStore.clients[0].id
+            return Text("\(label): \(clientStore.clients[0].name)").bold()
+        } else if let id = clientId,
+           let client = clientStore.clients.first(where: { $0.id == id }) {
+            return Text("\(label): \(client.name)").bold()
+        } else {
             return Text(label).bold()
         }
-        return Text("\(label): \(client.name)").bold()
+        
     }
     
     var clientsList: some View {
-        return SingleSelectionList<Client>(items: clients, selectedItemId: $clientId)
-            .frame(height: CGFloat(clients.count) > 2 ?  44 * 2.5 : 44 * CGFloat(clients.count))
+        return SingleSelectionList<Client>(items: clientStore.clients, selectedItemId: $clientId)
+            .frame(height: CGFloat(clientStore.clients.count) > 2
+                   ? Height.listItem * 2.5
+                   : Height.listItem * CGFloat(clientStore.clients.count)
+            )
     }
     
     var addClientButton: some View {
         NavigatableSheetPresenter(
-            navigatable: {
-                NavigatableView(root: .addClient)
-            },
-            label: Translation.Project.addProjectNewClientButton.val,
-            dismissHandler: getClients
+            navigatable: { NavigatableView(root: .addClient) },
+            label: Translation.Project.addProjectNewClientButton.val
         )
         .accentColor(.labelLinks)
     }
@@ -166,64 +159,38 @@ private extension ProjectCreateScreen {
     }
     
     var addProjectButton: some View {
-        Button(action: addProject) {
+        Button(action: didPressAddProject) {
             Text(Translation.General.buttonCreate.val)
         }
         .accentColor(.labelLinks)
-        .disabled(!(isProjectNameValid ?? false))
+        .disabled(!isFormValid())
     }
     
-    func getClients() {
-        if isPreview {
-            clients = buildTestClientsList()
-        } else {
-            RequestManager.shared.getClients { [alertinator] data in
-                switch data.result {
-                case .success(let response):
-                    Task { @MainActor in
-                        if response.clients.count == 1 {
-                            self.clientId = response.clients[0].id
-                        }
-                        clients = response.clients
-                    }
-                case .failure(let error):
-                    alertinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
-                }
-            }
-        }
-    }
-    
-    func addProject() {
-        guard let clientId = clientId ?? projectCreateData.clientId else {
+    func didPressAddProject() {
+        guard let clientId = getClientId() else {
             alertinator.presentAlert(CustomAlert.generalError())
             return
         }
-        RequestManager.shared.addProject(
-            clientId: isPreview ? Client.testClientId : clientId,
+        storeManager.addProject(
+            clientId: clientId,
             projectName: projectName,
             rate: rate,
             rateType: rateType
-        ) { [alertinator, coordinator] data in
-            switch data.result {
-            case .success:
+        ) { error in
+            if let error {
+                alertinator.presentAlert(error)
+            } else {
                 let success = GenericSuccessData(message: Translation.Project.addProjectSuccessMessage.val)
                 coordinator.push(.success(success))
-            case .failure(let error):
-                alertinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
             }
         }
     }
     
-    func buildTestClientsList() -> [Client] {
-        [
-            Client(id: 2, name: "Anicura", projects: [], userId: TickTockDefaults.shared.userId),
-            Client(id: 3, name: "Den Boom", projects: [], userId: TickTockDefaults.shared.userId),
-            Client(id: 4, name: "Pet Sematary", projects: [], userId: TickTockDefaults.shared.userId),
-            Client(id: 5, name: "Dawg Life", projects: [], userId: TickTockDefaults.shared.userId)
-        ]
+    func getClientId() -> Int? {
+        clientId ?? clientStore.client?.id
     }
-}
-
-#Preview {
-    ProjectCreateScreen(projectCreateData: ProjectCreateData(clientId: nil))
+    
+    func isFormValid() -> Bool {
+        isProjectNameValid == true && getClientId() != nil
+    }
 }

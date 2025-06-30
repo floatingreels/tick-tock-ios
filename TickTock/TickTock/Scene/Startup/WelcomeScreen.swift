@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WelcomeScreen: View {
     
-    @EnvironmentObject private var coordinator: Coordinator
+    @Environment(Coordinator.self) private var coordinator
     
     var body: some View {
         VStack(spacing: Spacing.interItem * 3) {

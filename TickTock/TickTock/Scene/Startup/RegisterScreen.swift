@@ -13,8 +13,10 @@ enum InputField {
 
 struct RegisterScreen: View {
     
-    @EnvironmentObject private var alertinator: Alertinator
-    @EnvironmentObject private var coordinator: Coordinator
+    @Environment(AuthStore.self) private var authStore
+    @Environment(Alertinator.self) private var alertinator
+    @Environment(Coordinator.self) private var coordinator
+    
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var email: String = ""
@@ -180,7 +182,7 @@ private extension RegisterScreen {
     }
     
     func signUp() {
-        AuthManager.shared.performUserRegistration(
+     authStore.signUp(
             firstName: firstName,
             lastName: lastName,
             email: email,

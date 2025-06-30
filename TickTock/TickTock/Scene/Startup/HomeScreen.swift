@@ -10,8 +10,11 @@ import SwiftUI
 struct HomeScreen: View {
     
     private let testDismissLog = "Testing dismiss handler on sheet"
-    @EnvironmentObject private var alertinator: Alertinator
-    @EnvironmentObject private var coordinator: Coordinator
+    @Environment(AuthStore.self) private var authStore
+    @Environment(ProjectStore.self) private var projectStore
+    @Environment(ClientStore.self) private var clientStore
+    @Environment(Alertinator.self) private var alertinator
+    @Environment(Coordinator.self) private var coordinator
     
     var body: some View {
         ScrollView {
@@ -42,6 +45,10 @@ struct HomeScreen: View {
         }
         .navigationTitle(Translation.Startup.homeNavTitle.val)
         .padding(Spacing.interItem)
+        .onAppear {
+            clientStore.resetAll()
+            projectStore.resetAll()
+        }
     }
 }
 
@@ -53,16 +60,14 @@ private extension HomeScreen {
         }
     }
     var listClientsButton: some View {
-        Button(action: showClientsList) {
+        Button(action: didPressClientsList) {
             Text(Translation.Startup.buttonListClients.val)
         }
         .accentColor(.labelLinks)
     }
     var addClientButton: some View {
         NavigatableSheetPresenter(
-            navigatable: {
-                NavigatableView(root: .addClient)
-            },
+            navigatable: { NavigatableView(root: .addClient) },
             label: Translation.Startup.buttonAddClient.val)
         .accentColor(.labelLinks)
     }
@@ -73,12 +78,11 @@ private extension HomeScreen {
         .accentColor(.labelLinks)
     }
     var newProjectButton: some View {
-        let data = ProjectCreateData(clientId: nil)
         return NavigatableSheetPresenter(
-            navigatable: {
-                NavigatableView(root: .addProject(data))
-            },
-            label: Translation.Startup.buttonNewProject.val)
+            navigatable: { NavigatableView(root: .addProject) },
+            label: Translation.Startup.buttonNewProject.val,
+            presentHandler: didPressCreateProject
+        )
         .accentColor(.labelLinks)
     }
     
@@ -89,13 +93,28 @@ private extension HomeScreen {
         .accentColor(.labelLinks)
     }
     
-    func showClientsList() {
-        coordinator.push(.listClients)
+    func didPressClientsList() {
+        clientStore.getAllClients { error in
+            if let error {
+                alertinator.presentAlert(error)
+            } else {
+                coordinator.push(.listClients)
+            }
+        }
+    }
+    
+    func didPressCreateProject() {
+        clientStore.getAllClients { _ in }
     }
     
     func showProjectsList() {
-        let data = ProjectsListData(clientId: nil)
-        coordinator.push(.listProjects(data))
+        projectStore.getAllProjects { error in
+            if let error {
+                alertinator.presentAlert(error)
+            } else {
+                coordinator.push(.listProjects)
+            }
+        }
     }
     
     func startSession() {
@@ -103,7 +122,7 @@ private extension HomeScreen {
     }
     
     func logout() {
-        AuthManager.shared.logout()
+        authStore.logout()
         coordinator.popToRoot()
     }
 }

@@ -9,8 +9,9 @@ import SwiftUI
 
 struct LoginScreen: View {
     
-    @EnvironmentObject private var alertinator: Alertinator
-    @EnvironmentObject private var coordinator: Coordinator
+    @Environment(AuthStore.self) private var authStore
+    @Environment(Alertinator.self) private var alertinator
+    @Environment(Coordinator.self) private var coordinator
     
     @FocusState private var inFocus: InputField?
     @State private var email: String = ""
@@ -112,10 +113,7 @@ private extension LoginScreen {
     }
     
     func logIn() {
-        AuthManager.shared.performUserLogin(
-            email: email,
-            password: password
-        ) { [alertinator, coordinator] data in
+        authStore.logIn(email: email, password: password) { [alertinator, coordinator] data in
             switch data.result {
             case .success:
                 coordinator.push(.home)
@@ -125,7 +123,7 @@ private extension LoginScreen {
         }
     }
     
-    private func isFormValid() -> Bool { email.isValidEmail && password.isValidPassword }
+    func isFormValid() -> Bool { email.isValidEmail && password.isValidPassword }
 }
 
 #Preview {

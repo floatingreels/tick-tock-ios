@@ -7,21 +7,12 @@
 
 import SwiftUI
 
-struct ClientDetailData: Hashable {
-    let clientId: Int
-}
-
 struct ClientDetailScreen: View {
     
-    @EnvironmentObject private var alertinator: Alertinator
-    @EnvironmentObject private var coordinator: Coordinator
-    @State private var client: Client?
-    private let clientDetailData: ClientDetailData
-    private let requestManager = RequestManager.shared
-    
-    init(clientDetailData: ClientDetailData) {
-        self.clientDetailData = clientDetailData
-    }
+    @Environment(ClientStore.self) private var clientStore
+    @Environment(ProjectStore.self) private var projectStore
+    @Environment(Alertinator.self) private var alertinator
+    @Environment(Coordinator.self) private var coordinator
     
     var body: some View {
         ScrollView {
@@ -34,20 +25,17 @@ struct ClientDetailScreen: View {
                 }
                 VStack(alignment: .leading, spacing: Spacing.interItem) {
                     projectsLabel
-                    if let projects = client?.projects, !projects.isEmpty {
+                    if let projects = clientStore.client?.projects, !projects.isEmpty {
                         projectsList
-                            .listStyle(.insetGrouped)
-                            .scrollContentBackground(.hidden)
                     }
                     newProjectButton
                 }
-                Spacer()
             }
             .padding(Spacing.interItem)
             .containerRelativeFrame([.horizontal, .vertical], alignment: .topLeading)
         }
-        .task { fetchClientDetails() }
         .navigationTitle(Translation.Client.detailClientNavTitle.val)
+        .onAppear(perform: projectStore.resetProjectDetail)
     }
 }
 
@@ -58,56 +46,40 @@ private extension ClientDetailScreen {
     }
     
     var headerText: some View {
-        Text(client?.name ?? Translation.Error.general_message.val)
+        Text(clientStore.client?.name ?? Translation.Error.general_message.val)
     }
     
     var projectsLabel: some View {
-        Text(Translation.Client.detailClientProjectsLabel.val)
+        Text(Translation.Client.detailClientProjectsLabel.val).bold()
     }
     
     var projectsList: some View {
-        NavigatableList(items: client?.projects ?? [], onSelection: goToProjectDetail)
+        NavigatableList(items: clientStore.client?.projects ?? [], onSelection: didSelectProject)
+            .frame(height: CGFloat(getProjectsCount()) > 3
+                    ? Height.listItem * 3.5
+                    : Height.listItem * CGFloat(getProjectsCount())
+            )
     }
     
     var newProjectButton: some View {
-        let data = ProjectCreateData(clientId: clientDetailData.clientId)
         return NavigatableSheetPresenter(
-            navigatable: {
-                NavigatableView(root: .addProject(data))
-            },
-            label: Translation.Client.detailClientNewProject.val,
-            dismissHandler: fetchClientDetails
+            navigatable: { NavigatableView(root: .addProject) },
+            label: Translation.Client.detailClientNewProject.val
         )
         .accentColor(.labelLinks)
     }
     
-    func fetchClientDetails() {
-        guard !isPreview else {
-            client = buildTestClient()
-            return
-        }
-        requestManager.getClientDetail(clientId: clientDetailData.clientId) { [alertinator] data in
-            switch data.result {
-            case .success(let response):
-                Task { @MainActor in
-                    client = response.client
-                }
-            case .failure(let error):
-                alertinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
+    func didSelectProject(projectId: Int) {
+        projectStore.getProjectDetail(projectId: projectId) { error in
+            if let error {
+                alertinator.presentAlert(error)
+            } else {
+                coordinator.push(.detailProject)
             }
         }
     }
-        
-    func goToProjectDetail(projectId: Int) {
-        let data = ProjectDetailData(projectId: projectId)
-        coordinator.push(.detailProject(data))
-    }
     
-    func buildTestClient() -> Client {
-        Client(id: 4, name: "Pet Sematary", projects: [], userId: TickTockDefaults.shared.userId)
+    func getProjectsCount() -> Int {
+        (clientStore.client?.projects ?? []).count
     }
-}
-
-#Preview {
-    ClientDetailScreen(clientDetailData: ClientDetailData(clientId: Client.testClientId))
 }

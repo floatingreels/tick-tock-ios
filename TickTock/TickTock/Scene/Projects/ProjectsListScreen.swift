@@ -7,28 +7,18 @@
 
 import SwiftUI
 
-struct ProjectsListData: Hashable {
-    let clientId: Int?
-}
-
 struct ProjectsListScreen: View {
     
-    @EnvironmentObject private var alertinator: Alertinator
-    @EnvironmentObject private var coordinator: Coordinator
-    @State private var projects: [Project] = []
-    private let projectsData: ProjectsListData
-    private let requestManager = RequestManager.shared
-    
-    init(projectsData: ProjectsListData) {
-        self.projectsData = projectsData
-    }
+    @Environment(ClientStore.self) private var clientStore
+    @Environment(ProjectStore.self) private var projectStore
+    @Environment(Alertinator.self) private var alertinator
+    @Environment(Coordinator.self) private var coordinator
     
     var body: some View {
         VStack(spacing: Spacing.interItem * 2) {
             headerImage
             projectsList
         }
-        .task { fetchProjects() }
         .toolbar {
             ToolbarItem {
                 toolBarButton
@@ -36,6 +26,7 @@ struct ProjectsListScreen: View {
         }
         .padding(Spacing.interItem)
         .navigationTitle(Translation.Project.listProjectsNavTitle.val)
+        .onAppear(perform: projectStore.resetProjectDetail)
     }
 }
 
@@ -43,12 +34,10 @@ private extension ProjectsListScreen {
     
     var toolBarButton: some View {
         NavigatableSheetPresenter(
-            navigatable: {
-                let data = ProjectCreateData(clientId: projectsData.clientId)
-                NavigatableView(root: .addProject(data))
-            },
+            navigatable: { NavigatableView(root: .addProject) },
             image: (name: ToolBarButtonType.add.rawValue, isSystem: true),
-            dismissHandler: fetchProjects)
+            presentHandler: didPressCreateProject
+        )
             .accentColor(.labelLinks)
     }
     
@@ -57,40 +46,43 @@ private extension ProjectsListScreen {
     }
     
     var projectsList: some View  {
-        NavigatableList(items: projects, onSelection: goToDetail)
+        NavigatableList(items: isPreview ? testProjects : projectStore.projects, onSelection: didSelectProject)
     }
     
-    func fetchProjects() {
-        guard !isPreview else {
-            projects = buildTestProjectsList()
-            return
-        }
-        requestManager.getProjects(clientId: projectsData.clientId) { [alertinator] data in
-            switch data.result {
-            case .success(let response):
-                Task { @MainActor in
-                    projects = response.projects
-                }
-            case .failure(let error):
-                alertinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
+    func didSelectProject(projectId: Int) {
+        projectStore.getProjectDetail(projectId: projectId) { error in
+            if let error {
+                alertinator.presentAlert(error)
+            } else {
+                coordinator.push(.detailProject)
             }
         }
     }
     
-    func goToDetail(projectId: Int) {
-        let data = ProjectDetailData(projectId: projectId)
-        coordinator.push(.detailProject(data))
-    }
-    
-    func buildTestProjectsList() -> [Project] {
-        [
-            Project(id: 2, clientId: 2, name: "Manhattan Project", rate: 12.33, rateTypeString: "hour", statusString: "active"),
-            Project(id: 3, clientId: 2, name: "Project X", rate: 111, rateTypeString: "week", statusString: "active"),
-            Project(id: 4, clientId: 2, name: "Projection Rate", rate: 0.0, rateTypeString: "hour", statusString: "active")
-        ]
+    func didPressCreateProject() {
+        clientStore.getAllClients { _ in }
     }
 }
 
 #Preview {
-    ProjectsListScreen(projectsData: ProjectsListData(clientId: Client.testClientId))
+    ProjectsListScreen()
+        .environment(ClientStore(requestManager: RequestManager.shared))
+        .environment(ProjectStore(requestManager: RequestManager.shared))
+        .environment(Alertinator())
+        .environment(Coordinator())
+}
+
+private extension ProjectsListScreen {
+    var testProjects: [Project] {
+        [
+            Project(id: 1, clientId: 1, name: "First Project", rate: 1800, rateTypeString: "week", statusString: "active"),
+            Project(id: 2, clientId: 1, name: "Project X", rate: 31.2, rateTypeString: "hour", statusString: "active"),
+            Project(id: 3, clientId: 2, name: "Manhattan Project", rate: 4771, rateTypeString: "month", statusString: "active"),
+            Project(id: 4, clientId: 3, name: "The Projects", rate: 66.6, rateTypeString: "hour", statusString: "active"),
+            Project(id: 5, clientId: 3, name: "Pro Geny", rate: 500, rateTypeString: "day", statusString: "active"),
+            Project(id: 6, clientId: 3, name: "Astral Projection", rate: 72, rateTypeString: "hour", statusString: "active"),
+            Project(id: 7, clientId: 5, name: "P.R.O.J.E.C.T", rate: 420, rateTypeString: "day", statusString: "active"),
+            Project(id: 8, clientId: 5, name: "The Jects", rate: 2250, rateTypeString: "week", statusString: "active")
+        ]
+    }
 }

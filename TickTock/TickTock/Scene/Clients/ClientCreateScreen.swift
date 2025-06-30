@@ -9,8 +9,9 @@ import SwiftUI
 
 struct ClientCreateScreen: View {
     
-    @EnvironmentObject private var alertinator: Alertinator
-    @EnvironmentObject private var coordinator: Coordinator
+    @Environment(ClientStore.self) private var clientStore
+    @Environment(Alertinator.self) private var alertinator
+    @Environment(Coordinator.self) private var coordinator
     @State private var companyName: String = ""
     @State private var isClientNameValid: Bool? = nil
     
@@ -22,7 +23,6 @@ struct ClientCreateScreen: View {
                     headerText
                 }
             }
-            
             VStack(alignment: .leading, spacing: Spacing.interItem) {
                 clientNameLabel
                 clientNameTextView
@@ -69,21 +69,20 @@ private extension ClientCreateScreen {
     }
     
     var addClientButton: some View {
-        Button(action: addClient) {
-            Text(Translation.General.buttonCreate.val)  
+        Button(action: didPressAddClient) {
+            Text(Translation.General.buttonCreate.val)
         }
         .accentColor(.labelLinks)
         .disabled(!(isClientNameValid ?? false))
     }
     
-    func addClient() {
-        RequestManager.shared.addClient(companyName: companyName) { [alertinator, coordinator] data in
-            switch data.result {
-            case .success:
+    func didPressAddClient() {
+        clientStore.addClient(companyName: companyName) { error in
+            if let error {
+                alertinator.presentAlert(error)
+            } else {
                 let success = GenericSuccessData(message: Translation.Client.addClientSuccessMessage.val)
                 coordinator.push(.success(success))
-            case .failure(let error):
-                alertinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
             }
         }
     }
