@@ -13,23 +13,30 @@ struct NavigatableSheetPresenter<Navigatable: View>: View {
     private var navigatable: () -> Navigatable
     private var label: String?
     private var image: ImageTuple?
+    private var presentHandler: PresentHandler?
     private var dismissHandler: DismissHandler?
     
     init(@ViewBuilder navigatable: @escaping () -> Navigatable,
          label: String,
-         dismissHandler: DismissHandler? = nil) {
+         presentHandler: PresentHandler? = nil,
+         dismissHandler: DismissHandler? = nil
+    ) {
         self.navigatable = navigatable
         self.label = label
         self.image = nil
+        self.presentHandler = presentHandler
         self.dismissHandler = dismissHandler
     }
     
     init(@ViewBuilder navigatable: @escaping () -> Navigatable,
          image: ImageTuple,
-         dismissHandler: DismissHandler? = nil) {
+         presentHandler: PresentHandler? = nil,
+         dismissHandler: DismissHandler? = nil
+    ) {
         self.navigatable = navigatable
         self.label = nil
         self.image = image
+        self.presentHandler = presentHandler
         self.dismissHandler = dismissHandler
     }
     
@@ -61,6 +68,9 @@ private extension NavigatableSheetPresenter {
     func buildLabelButton(_ label: String) -> some View {
         Button {
             isPresenting.toggle()
+            if isPresenting {
+                presentHandler?()
+            }
         } label: {
             Text(label)
         }
@@ -69,6 +79,9 @@ private extension NavigatableSheetPresenter {
     func buildIconButton(_ image: ImageTuple) -> some View {
         Button(action: {
             isPresenting.toggle()
+            if isPresenting {
+                presentHandler?()
+            }
         }) {
             image.isSystem ? Image(systemName: image.name) : Image(image.name)
         }
