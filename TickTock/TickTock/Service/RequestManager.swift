@@ -2,16 +2,28 @@
 //  RequestManager.swift
 //  TickTock
 //
-//  Created by David Gunzburg on 22/05/2025.
+//  Created by David Gunzburg on 02/06/2025.
 //
 
-import Foundation
 import Alamofire
+import Foundation
 
 final class RequestManager {
     
     static let shared = RequestManager()
     private let service = BackendService()
+
+    private init() {}
+    
+    func performUserRegistration(firstName: String, lastName: String, email: String, password: String, completion: @escaping @Sendable (AFDataResponse<LoginResponse>) -> Void) {
+        let request = UserRegistrationRequest(firstName: firstName, lastName: lastName, email: email, password: password)
+        service.execute(request: request, completion: completion)
+    }
+    
+    func performUserLogin(email: String, password: String, completion: @escaping @Sendable (AFDataResponse<LoginResponse>) -> Void) {
+        let request = UserLoginRequest(email: email, password: password)
+        service.execute(request: request, completion: completion)
+    }
     
     func getClients(completion: @escaping @Sendable (AFDataResponse<GetClientsResponse>) -> Void) {
         let request = GetClienstRequest()
