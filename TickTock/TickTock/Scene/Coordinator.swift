@@ -12,6 +12,7 @@ final class Coordinator {
     
     var path = NavigationPath()
     var sheet: AppScreen?
+    var alert: CustomAlert?
     
     func push(_ screen: AppScreen) {
         path.append(screen)
@@ -31,6 +32,14 @@ final class Coordinator {
     
     func dismissSheet() {
         self.sheet = nil
+    }
+    
+    func presentAlert(_ alert: CustomAlert) {
+        self.alert = alert
+    }
+    
+    func dismissAlert() {
+        self.alert = nil
     }
     
     @ViewBuilder func buildScreen(_ screen: AppScreen) -> some View {
