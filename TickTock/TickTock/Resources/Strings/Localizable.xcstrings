@@ -1,12 +1,32 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%@ with id: %lld" : {
+    "active_session_navigation_title" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ with id: %2$lld"
+            "state" : "translated",
+            "value" : "Active session"
+          }
+        }
+      }
+    },
+    "active_session_start_button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        }
+      }
+    },
+    "active_session_stop_button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
           }
         }
       }
@@ -150,6 +170,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Project details"
+          }
+        }
+      }
+    },
+    "detail_project_sessions_label" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sessions"
           }
         }
       }
@@ -530,6 +560,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "per week"
+          }
+        }
+      }
+    },
+    "project_start_session_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start session"
           }
         }
       }

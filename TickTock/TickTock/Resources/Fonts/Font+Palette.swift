@@ -18,6 +18,18 @@ extension Font {
         }
     }
     
+    static func superLargeTitle(weight: Font.Weight = .regular) -> Font {
+        return .appFont(ofSize: 56, weight: weight)
+    }
+    
+    static func extraLargeTitle(weight: Font.Weight = .regular) -> Font {
+        return .appFont(ofSize: 36, weight: weight)
+    }
+    
+    static func largeTitle(weight: Font.Weight = .regular) -> Font {
+        return .appFont(ofSize: 34, weight: weight)
+    }
+    
     static func title2(weight: Font.Weight = .regular) -> Font {
         return .appFont(ofSize: 22, weight: weight)
     }

@@ -90,11 +90,24 @@ extension Translation {
         case projectNameLabel = "project_label_name"
         case listProjectsNavTitle = "list_project_navigation_title"
         case detailProjectNavTitle = "detail_project_navigation_title"
+        case detailProjectSessionsLabel = "detail_project_sessions_label"
         case projectRateLabel = "project_label_rate"
         case projectRateTypeHour = "project_rate_type_hour"
         case projectRateTypeDay = "project_rate_type_day"
         case projectRateTypeWeek = "project_rate_type_week"
         case projectRateTypeMonth = "project_rate_type_month"
+        case detailProjectStartSession = "project_start_session_button"
+        
+        var val: String {
+            let res = LocalizedStringResource(self.rawValue, table: "Localizable")
+            return String(localized: res)
+        }
+    }
+    
+    enum Session: String.LocalizationValue {
+        case activeSessionNavTitle = "active_session_navigation_title"
+        case activeSessionStartButton = "active_session_start_button"
+        case activeSessionStopButton = "active_session_stop_button"
         
         var val: String {
             let res = LocalizedStringResource(self.rawValue, table: "Localizable")
