@@ -16,6 +16,7 @@ enum AppScreen: Hashable, Identifiable {
     case addProject
     case listProjects
     case detailProject
+    case activeSession
     case success(GenericSuccessData)
     
     var id: String { String(describing: self) }

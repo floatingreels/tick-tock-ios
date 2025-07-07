@@ -55,6 +55,7 @@ final class Coordinator {
         case .addProject: ProjectCreateScreen()
         case .listProjects: ProjectsListScreen()
         case .detailProject: ProjectDetailScreen()
+        case .activeSession: SessionActiveScreen()
         }
     }
     
