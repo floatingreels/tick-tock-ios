@@ -33,17 +33,16 @@ struct ProjectCreateScreen: View {
                 }
                 if clientStore.client == nil {
                     VStack(alignment: .leading, spacing: Spacing.interItem) {
-                        switch clientStore.clients.count {
-                        case 0, 1:
-                            clientsLabel
-                            addClientButton
-                        default:
+                        if isPreview || clientStore.clients.count > 1 {
                             HStack {
                                 clientsLabel
                                 Spacer()
                                 addClientButton
                             }
                             clientsList
+                        } else {
+                            clientsLabel
+                            addClientButton
                         }
                     }
                 }
@@ -78,27 +77,31 @@ private extension ProjectCreateScreen {
     
     var headerText: some View {
         Text(Translation.Project.addProjectFormDescription.val)
+            .font(Font.body())
     }
     
     var clientsLabel: some View {
-        let label = Translation.Project.addProjectClientLabel.val
+        var label = Translation.Project.addProjectClientLabel.val
         if clientStore.clients.count == 1 {
             clientId = clientStore.clients[0].id
-            return Text("\(label): \(clientStore.clients[0].name)").bold()
+            label = "\(label): \(clientStore.clients[0].name)"
         } else if let id = clientId,
            let client = clientStore.clients.first(where: { $0.id == id }) {
-            return Text("\(label): \(client.name)").bold()
-        } else {
-            return Text(label).bold()
+            label = "\(label): \(client.name)"
         }
+        return Text(label)
+            .font(Font.title3(weight: .bold))
         
     }
     
     var clientsList: some View {
-        return SingleSelectionList<Client>(items: clientStore.clients, selectedItemId: $clientId)
-            .frame(height: CGFloat(clientStore.clients.count) > 2
+        let items = isPreview
+            ? ClientStore.buildTestClients()
+            : clientStore.clients
+        return SingleSelectionList<Client>(items: items, selectedItemId: $clientId)
+            .frame(height: CGFloat(items.count) > 2
                    ? Height.listItem * 2.5
-                   : Height.listItem * CGFloat(clientStore.clients.count)
+                   : Height.listItem * CGFloat(items.count)
             )
     }
     
@@ -111,7 +114,8 @@ private extension ProjectCreateScreen {
     }
     
     var projectNameLabel: some View {
-        Text(Translation.Project.projectNameLabel.val).bold()
+        Text(Translation.Project.projectNameLabel.val)
+            .font(Font.title3(weight: .bold))
     }
     
     var projectNameTextView: some View {
@@ -132,7 +136,8 @@ private extension ProjectCreateScreen {
     }
     
     var rateLabel: some View {
-        Text(String("Your rate:")).bold()
+        Text(String("Your rate:"))
+            .font(Font.title3(weight: .bold))
     }
     
     var rateTextView: some View {
@@ -192,4 +197,11 @@ private extension ProjectCreateScreen {
     func isFormValid() -> Bool {
         isProjectNameValid == true && getClientId() != nil
     }
+}
+
+#Preview {
+    ProjectCreateScreen()
+        .environment(ClientStore(requestManager: RequestManager.shared))
+        .environment(StoreManager(requestManager: RequestManager.shared))
+        .environment(Coordinator())
 }

@@ -15,7 +15,7 @@ struct ClientCreateScreen: View {
     @State private var isClientNameValid: Bool? = nil
     
     var body: some View {
-        VStack(spacing: Spacing.interItem * 2) {
+        VStack(alignment: .leading, spacing: Spacing.interItem * 2) {
             CenteredHStack {
                 VStack(alignment: .center, spacing: Spacing.interItem) {
                     headerImage
@@ -89,4 +89,6 @@ private extension ClientCreateScreen {
 
 #Preview {
     ClientCreateScreen()
+        .environment(ClientStore(requestManager: RequestManager.shared))
+        .environment(Coordinator())
 }

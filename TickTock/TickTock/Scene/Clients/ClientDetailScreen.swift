@@ -12,10 +12,11 @@ struct ClientDetailScreen: View {
     @Environment(ClientStore.self) private var clientStore
     @Environment(ProjectStore.self) private var projectStore
     @Environment(Coordinator.self) private var coordinator
+    let testClientId = Int.random(in: 1...5)
     
     var body: some View {
         ScrollView {
-            VStack(spacing: Spacing.interItem * 2) {
+            VStack(alignment: .leading, spacing: Spacing.interItem * 2) {
                 CenteredHStack {
                     VStack(alignment: .center, spacing: Spacing.interItem) {
                         headerImage
@@ -24,7 +25,9 @@ struct ClientDetailScreen: View {
                 }
                 VStack(alignment: .leading, spacing: Spacing.interItem) {
                     projectsLabel
-                    if let projects = clientStore.client?.projects, !projects.isEmpty {
+                    if isPreview {
+                        projectsList
+                    } else if let projects = clientStore.client?.projects, !projects.isEmpty {
                         projectsList
                     }
                     newProjectButton
@@ -45,18 +48,25 @@ private extension ClientDetailScreen {
     }
     
     var headerText: some View {
-        Text(clientStore.client?.name ?? Translation.Error.general_message.val)
+        let name =  isPreview
+            ? ClientStore.buildTestClients().first(where: { $0.id == testClientId })?.name
+            : clientStore.client?.name
+        return Text(name ?? Translation.Error.general_message.val)
     }
     
     var projectsLabel: some View {
-        Text(Translation.Client.detailClientProjectsLabel.val).bold()
+        Text(Translation.Client.detailClientProjectsLabel.val)
+            .font(Font.title3(weight: .bold))
     }
     
     var projectsList: some View {
-        NavigatableList(items: clientStore.client?.projects ?? [], onSelection: didSelectProject)
-            .frame(height: CGFloat(getProjectsCount()) > 3
+        let items = isPreview
+            ? ProjectStore.buildTestProjects().filter { $0.clientId == testClientId }
+            : clientStore.client?.projects ?? []
+        return NavigatableList(items: items, onSelection: didSelectProject)
+            .frame(height: CGFloat(items.count) > 3
                     ? Height.listItem * 3.5
-                    : Height.listItem * CGFloat(getProjectsCount())
+                    : Height.listItem * CGFloat(items.count)
             )
     }
     
@@ -77,8 +87,11 @@ private extension ClientDetailScreen {
             }
         }
     }
-    
-    func getProjectsCount() -> Int {
-        (clientStore.client?.projects ?? []).count
-    }
+}
+
+#Preview {
+    ClientDetailScreen()
+        .environment(ClientStore(requestManager: RequestManager.shared))
+        .environment(ProjectStore(requestManager: RequestManager.shared))
+        .environment(Coordinator())
 }

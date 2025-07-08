@@ -43,7 +43,8 @@ private extension ClientsListScreen {
     }
     
     var clientsList: some View  {
-        NavigatableList(items: clientStore.clients, onSelection: didSelectClient)
+        let items = isPreview ? ClientStore.buildTestClients() : clientStore.clients
+        return NavigatableList(items: items, onSelection: didSelectClient)
     }
     
     func didSelectClient(clientId: Int) {
@@ -59,4 +60,6 @@ private extension ClientsListScreen {
 
 #Preview {
     ClientsListScreen()
+        .environment(ClientStore(requestManager: RequestManager.shared))
+        .environment(Coordinator())
 }
