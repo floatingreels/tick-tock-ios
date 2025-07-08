@@ -58,3 +58,22 @@ final class ProjectStore {
         resetProjectsList()
     }
 }
+
+
+extension ProjectStore {
+    
+    static func buildTestProjects() -> [Project] {
+        [
+            Project(id: 1, clientId: 1, name: "Translation \"Arctica\"", rate: 1800, rateTypeString: "week", statusString: "active"),
+            Project(id: 2, clientId: 1, name: "Dossier Europe \"Arctica\"", rate: 31.2, rateTypeString: "hour", statusString: "active"),
+            Project(id: 3, clientId: 2, name: "Manhattan Project", rate: 4771, rateTypeString: "month", statusString: "active"),
+            Project(id: 4, clientId: 3, name: "Unnamed FinTech app", rate: 66.6, rateTypeString: "hour", statusString: "active"),
+            Project(id: 5, clientId: 3, name: "TickTock", rate: 66.6, rateTypeString: "hour", statusString: "active"),
+            Project(id: 6, clientId: 3, name: "MicroServices", rate: 66.6, rateTypeString: "hour", statusString: "active"),
+            Project(id: 7, clientId: 4, name: "P.R.O.J.E.C.T", rate: 420, rateTypeString: "day", statusString: "active"),
+            Project(id: 8, clientId: 5, name: "Reject", rate: 2250, rateTypeString: "week", statusString: "active"),
+            Project(id: 9, clientId: 5, name: "Anonymous", rate: 420, rateTypeString: "day", statusString: "active"),
+            Project(id: 10, clientId: 5, name: "The Jects", rate: 2250, rateTypeString: "week", statusString: "active")
+        ]
+    }
+}

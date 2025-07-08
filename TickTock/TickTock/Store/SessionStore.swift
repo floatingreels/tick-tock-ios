@@ -39,3 +39,55 @@ final class SessionStore {
         requestManager.deleteSession(clientId: clientId, projectId: projectId, sessionId: sessionId, completion: completion)
     }
 }
+
+extension SessionStore {
+    
+    static func buildTestSessions() -> [Session] {
+        let clients = ClientStore.buildTestClients()
+        let projects = ProjectStore.buildTestProjects()
+        var sessions: [Session] = []
+        projects.forEach { p in
+            sessions.append(Session(
+                id: 100 * p.id + 1,
+                projectId: p.id,
+                projectName: p.name,
+                clientName: clients.first(where: { $0.id == p.clientId ?? 0 })?.name ?? "Mystery Customer",
+                startedAt: "2025-06-30T22:23:46Z",
+                endedAt: "2025-07-01T00:01:46Z"
+            ))
+            sessions.append(Session(
+                id: 100 * p.id + 2,
+                projectId: p.id,
+                projectName: p.name,
+                clientName: clients.first(where: { $0.id == p.clientId ?? 0 })?.name ?? "Mystery Customer",
+                startedAt: "2025-05-30T12:00:46Z",
+                endedAt: "2025-05-30T16:06:46Z"
+            ))
+            sessions.append(Session(
+                id: 100 * p.id + 3,
+                projectId: p.id,
+                projectName: p.name,
+                clientName: clients.first(where: { $0.id == p.clientId ?? 0 })?.name ?? "Mystery Customer",
+                startedAt: "2025-02-22T12:23:46Z",
+                endedAt: "2025-02-22T18:01:46Z"
+            ))
+            sessions.append(Session(
+                id: 100 * p.id + 4,
+                projectId: p.id,
+                projectName: p.name,
+                clientName: clients.first(where: { $0.id == p.clientId ?? 0 })?.name ?? "Mystery Customer",
+                startedAt: "2025-06-11T08:00:46Z",
+                endedAt: "2025-06-11T12:31:46Z"
+            ))
+            sessions.append(Session(
+                id: 100 * p.id + 5,
+                projectId: p.id,
+                projectName: p.name,
+                clientName: clients.first(where: { $0.id == p.clientId ?? 0 })?.name ?? "Mystery Customer",
+                startedAt: "2025-06-11T13:13:46Z",
+                endedAt: "2025-06-11T18:31:46Z"
+            ))
+        }
+        return sessions
+    }
+}

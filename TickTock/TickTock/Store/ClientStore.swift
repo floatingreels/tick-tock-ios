@@ -98,3 +98,17 @@ final class ClientStore {
         resetClientsList()
     }
 }
+
+extension ClientStore {
+    
+    static func buildTestClients() -> [Client] {
+        let projects = ProjectStore.buildTestProjects()
+        return [
+            Client(id: 1, name: "Client Tell", projects: projects.filter { $0.clientId == 1 }),
+            Client(id: 2, name: "Covert Government Agency", projects: projects.filter { $0.clientId == 3 }),
+            Client(id: 3, name: "Sibling Rivalry", projects: projects.filter { $0.clientId == 3 }),
+            Client(id: 4, name: "Butsel nv", projects: projects.filter { $0.clientId == 4 }),
+            Client(id: 5, name: "ACME Corp", projects: projects.filter { $0.clientId == 5 }),
+        ]
+    }
+}
