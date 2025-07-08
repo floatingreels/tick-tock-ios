@@ -9,7 +9,8 @@ import SwiftUI
 
 protocol Selectable: Identifiable {
     var id: Int { get }
-    var name: String { get }
+    var title: String { get }
+    var subtitle: String? { get }
 }
 
 struct SingleSelectionList<Item: Selectable>: View {
@@ -26,25 +27,19 @@ struct SingleSelectionList<Item: Selectable>: View {
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .scrollIndicators(.hidden)
+        .padding(isPreview ? Spacing.interItem : 0)
     }
     
     private func buildCell(for item: Item) -> some View {
         SelectableItemCell(item: item, isSelected: item.id == selectedItemId)
             .contentShape(Rectangle())
-            .onTapGesture {
-                selectedItemId = item.id
-            }
+            .onTapGesture { selectedItemId = item.id }
     }
 }
 
 #Preview  {
     @Previewable @State var selectedItemId: Int? = 1
     SingleSelectionList(
-        items: [
-            Client(id: 1, name: "Some client", projects: nil, userId: 1),
-            Client(id: 2, name: "Another client", projects: nil, userId: 1),
-            Client(id: 3, name: "Weird client", projects: nil, userId: 1)
-            
-        ],
+        items: SessionStore.buildTestSessions().asSelectable(),
         selectedItemId: $selectedItemId)
 }

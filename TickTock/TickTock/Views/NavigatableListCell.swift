@@ -7,32 +7,53 @@
 
 import SwiftUI
 
-struct NavigatableListCell<Content: View>: View {
+struct NavigatableListCell<Item: Selectable>: View {
     
+    private let item: Item
     private let action: () -> Void
-    private let content: () -> Content
     
-    init(action: @escaping () -> Void, @ViewBuilder content: @escaping () -> Content) {
+    init(item: Item, action: @escaping () -> Void) {
+        self.item = item
         self.action = action
-        self.content = content
     }
     
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 0) {
-                content()
-                Spacer()
-                NavigationLink.empty
-                    .layoutPriority(-1)
+            HStack {
+                if let _ = item.subtitle {
+                    HStack {
+                        titleLabel
+                        Spacer()
+                        subtitleLabel
+                    }
+                } else {
+                    titleLabel
+                    Spacer()
+                }
+                chevron
             }
         }
-        .listRowBackground(Color.backgroundCell)
+        .listRowBackground(isPreview ? Color.backgroundPrimary : Color.backgroundCell)
         .tint(.labelPrimary)
+    }
+    
+    var titleLabel: some View {
+        Text(item.title).font(Font.body())
+    }
+    
+    var subtitleLabel: some View {
+        Text(item.subtitle ?? "").font(Font.footnote())
+    }
+    
+    var chevron: some View {
+        NavigationLink.empty
+            .layoutPriority(-1)
     }
 }
 
 #Preview {
-    NavigatableListCell(action: { print() }) {
-        Text("Some item")
-    }
+    NavigatableListCell(
+        item: ProjectStore.buildTestProjects().randomElement()!.toSelectable(),
+        action: { print() }
+    )
 }

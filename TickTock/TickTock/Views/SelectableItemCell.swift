@@ -6,26 +6,41 @@
 //
 
 import SwiftUI
-
+ 
 struct SelectableItemCell<Item: Selectable>: View {
     
-    let item: Item
-    let isSelected: Bool
+    private let item: Item
+    private let isSelected: Bool
+    
+    init(item: Item, isSelected: Bool) {
+        self.item = item
+        self.isSelected = isSelected
+    }
     
     var body: some View {
         HStack(spacing: 0) {
-            Text(item.name)
+            Text(item.title)
+                .font(Font.body())
             Spacer()
         }
-        .listRowBackground(Color.backgroundCell)
+        .listRowBackground(getCellBackgroundColor())
         .tint(.labelPrimary)
         .modifier(CheckmarkModifier(checked: isSelected))
+    }       
+    
+    func getCellBackgroundColor() -> Color {
+        if isPreview {
+            isSelected ? Color.backgroundSecondary : Color.backgroundPrimary
+        } else {
+            isSelected ? Color.backgroundPrimary : Color.backgroundCell
+        }
     }
 }
 
 
 #Preview {
     SelectableItemCell(
-        item: Client(id: 2, name: "Some client", projects: nil, userId: 1),
-        isSelected: true)
+        item: SessionStore.buildTestSessions().randomElement()!.toSelectable(),
+        isSelected: true
+    )
 }
