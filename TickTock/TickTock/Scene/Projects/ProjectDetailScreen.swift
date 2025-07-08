@@ -61,9 +61,14 @@ private extension ProjectDetailScreen {
     }
     
     var sessionsList: some View {
-        let items = isPreview
-            ? SessionStore.buildTestSessions().filter { $0.projectId == testProjectId }
-            : projectStore.project?.sessions ?? []
+        var items: [SessionCellData] = []
+        if isPreview {
+            items = SessionStore.buildTestSessions()
+                .filter({ $0.projectId == testProjectId })
+                .asSelectable()
+        } else {
+            items = projectStore.project?.sessions?.asSelectable() ?? []
+        }
         return NavigatableList(items: items, onSelection: didSelectSession)
             .frame(height: CGFloat(items.count) > 3
                    ? Height.listItem * 3.5

@@ -45,8 +45,11 @@ private extension ProjectsListScreen {
     }
     
     var projectsList: some View  {
-        NavigatableList(
-            items: isPreview ? ProjectStore.buildTestProjects() : projectStore.projects,
+        let items = isPreview
+            ? ProjectStore.buildTestProjects().asSelectable()
+            : projectStore.projects.asSelectable()
+        return NavigatableList(
+            items: items,
             onSelection: didSelectProject)
     }
     

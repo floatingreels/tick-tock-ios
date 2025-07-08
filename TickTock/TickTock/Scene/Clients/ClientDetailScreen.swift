@@ -60,9 +60,14 @@ private extension ClientDetailScreen {
     }
     
     var projectsList: some View {
-        let items = isPreview
-            ? ProjectStore.buildTestProjects().filter { $0.clientId == testClientId }
-            : clientStore.client?.projects ?? []
+        var items: [ProjectCellData] = []
+        if isPreview {
+            items.append(contentsOf: ProjectStore.buildTestProjects()
+                .filter({ $0.clientId == testClientId })
+                .asSelectable())
+        } else {
+            items.append(contentsOf: clientStore.client?.projects?.asSelectable() ?? [])
+        }
         return NavigatableList(items: items, onSelection: didSelectProject)
             .frame(height: CGFloat(items.count) > 3
                     ? Height.listItem * 3.5

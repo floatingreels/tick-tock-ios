@@ -43,7 +43,9 @@ private extension ClientsListScreen {
     }
     
     var clientsList: some View  {
-        let items = isPreview ? ClientStore.buildTestClients() : clientStore.clients
+        let items = isPreview
+            ? ClientStore.buildTestClients().asSelectable()
+            : clientStore.clients.asSelectable()
         return NavigatableList(items: items, onSelection: didSelectClient)
     }
     

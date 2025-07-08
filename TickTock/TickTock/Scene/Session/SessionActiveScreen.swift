@@ -82,7 +82,7 @@ private extension SessionActiveScreen {
     
     func updateElapsedTime(_ date: Date) {
         if isTimerRunning {
-            guard let elapsed = DateTimeUtil.stopwatchStringFromInterval(date.timeIntervalSince(timeAtStart)) else {
+            guard let elapsed = DateTimeUtil.shared.stopwatchStringFromInterval(date.timeIntervalSince(timeAtStart)) else {
                 resetElapsedTime()
                 return
             }

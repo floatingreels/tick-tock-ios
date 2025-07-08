@@ -96,9 +96,9 @@ private extension ProjectCreateScreen {
     
     var clientsList: some View {
         let items = isPreview
-            ? ClientStore.buildTestClients()
-            : clientStore.clients
-        return SingleSelectionList<Client>(items: items, selectedItemId: $clientId)
+            ? ClientStore.buildTestClients().asSelectable()
+            : clientStore.clients.asSelectable()
+        return SingleSelectionList<ClientCellData>(items: items, selectedItemId: $clientId)
             .frame(height: CGFloat(items.count) > 2
                    ? Height.listItem * 2.5
                    : Height.listItem * CGFloat(items.count)
