@@ -9,7 +9,6 @@ import SwiftUI
 
 struct HomeScreen: View {
     
-    private let testDismissLog = "Testing dismiss handler on sheet"
     @Environment(AuthStore.self) private var authStore
     @Environment(ProjectStore.self) private var projectStore
     @Environment(ClientStore.self) private var clientStore
