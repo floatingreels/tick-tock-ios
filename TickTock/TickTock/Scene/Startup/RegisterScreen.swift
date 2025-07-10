@@ -7,24 +7,16 @@
 
 import SwiftUI
 
-enum InputField {
-        case firstName, lastName, email, password, passwordConfirm
-}
-
 struct RegisterScreen: View {
     
     @Environment(AuthStore.self) private var authStore
     @Environment(Coordinator.self) private var coordinator
-    
+    @FocusState private var inFocus: InputFieldType?
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var passwordConfirm: String = ""
-    @State private var isEmailValid: Bool? = nil
-    @State private var isPasswordValid: Bool? = nil
-    @State private var doPasswordsMatch: Bool? = nil
-    @FocusState private var inFocus: InputField?
     
     var body: some View {
         
@@ -32,38 +24,20 @@ struct RegisterScreen: View {
                 headerImage
                 headerText
                 VStack(spacing: Spacing.interItem) {
-                    firstNameTextView
-                    lastNameTextView
-                    VStack(spacing: Spacing.interItem / 2) {
-                        emailTextView
-                        if let isEmailValid {
-                            if !isEmailValid {
-                                emailErrorText
-                            }
-                        }
-                    }
-                    VStack(spacing: Spacing.interItem / 2) {
-                        passwordSecureField
-                        if let isPasswordValid {
-                            if !isPasswordValid {
-                                passwordErrorText
-                            }
-                        }
-                    }
-                    VStack(spacing: Spacing.interItem / 2) {
-                        passwordConfirmSecureField
-                        if let doPasswordsMatch {
-                            if !doPasswordsMatch {
-                                passwordConfirmErrorText
-                            }
-                        }
-                    }
+                    firstNameTextField
+                    lastNameTextField
+                    emailTextField
+                    passwordTextField
+                    passwordConfirmTextField
                 }
                 signupButton
                 Spacer()
             }
             .navigationTitle(Translation.Startup.registerNavTitle.val)
             .padding(Spacing.interItem)
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: { inFocus = .firstName })
+            }
     }
 }
 
@@ -79,97 +53,24 @@ private extension RegisterScreen {
         Text(Translation.Startup.registerFormDescription.val)
     }
     
-    var firstNameTextView: some View {
-        TextField(
-            Translation.General.labelFirstName.val,
-            text: $firstName,
-            onCommit: {
-                inFocus = .lastName
-            })
-        .textContentType(.givenName)
-        .keyboardType(.default)
-        .submitLabel(.next)
-        .focused($inFocus, equals: .firstName)
+    var firstNameTextField: some View {
+        CustomTextField(inputFieldType: .firstName, inFocus: $inFocus, text: $firstName, relinquishFocus: .lastName)
     }
     
-    var lastNameTextView: some View {
-        TextField(
-            Translation.General.labelLastName.val,
-            text: $lastName,
-            onCommit: {
-                inFocus = .email
-            })
-        .textContentType(.familyName)
-        .keyboardType(.default)
-        .submitLabel(.next)
-        .focused($inFocus, equals: .lastName)
+    var lastNameTextField: some View {
+        CustomTextField(inputFieldType: .lastName, inFocus: $inFocus, text: $lastName, relinquishFocus: .email)
     }
     
-    var emailTextView: some View {
-        TextField(
-            Translation.General.labelEmail.val,
-            text: $email,
-            onEditingChanged: { isEdting in
-                isEmailValid = isEdting ? nil : email.isValidEmail
-            },
-            onCommit: {
-                isEmailValid = email.isValidEmail
-                inFocus = .password
-            }
-        )
-        .textInputAutocapitalization(.never)
-        .textContentType(.emailAddress)
-        .keyboardType(.emailAddress)
-        .submitLabel(.next)
-        .focused($inFocus, equals: .email)
+    var emailTextField: some View {
+        CustomTextField(inputFieldType: .email, inFocus: $inFocus, text: $email, relinquishFocus: .password)
     }
     
-    var emailErrorText: some View {
-        Text(Translation.General.emailValidation.val)
-            .font(Font.caption2())
-            .foregroundStyle(Color.labelDestructive)
+    var passwordTextField: some View {
+        CustomTextField(inputFieldType: .password, inFocus: $inFocus, text: $password, relinquishFocus: .passwordConfirm)
     }
     
-    var passwordSecureField: some View {
-        SecureField(
-            Translation.General.labelPassword.val,
-            text: $password,
-            onCommit: {
-                isPasswordValid = password.isValidPassword
-                inFocus = .passwordConfirm
-            }
-        )
-        .textContentType(.newPassword)
-        .disableAutocorrection(true)
-        .submitLabel(.next)
-        .focused($inFocus, equals: .password)
-    }
-    
-    var passwordErrorText: some View {
-        Text(Translation.General.passwordRequirements.val)
-            .font(Font.caption2())
-            .foregroundStyle(Color.labelDestructive)
-    }
-    
-    var passwordConfirmSecureField: some View {
-        SecureField(
-            Translation.General.labelPasswordConfirm.val,
-            text: $passwordConfirm,
-            onCommit: {
-                let didEnterPasswords = !password.isBlank && !passwordConfirm.isBlank
-                doPasswordsMatch = didEnterPasswords && password == passwordConfirm
-            }
-        )
-        .textContentType(.password)
-        .disableAutocorrection(true)
-        .submitLabel(.done)
-        .focused($inFocus, equals: .passwordConfirm)
-    }
-    
-    var passwordConfirmErrorText: some View {
-        Text(Translation.General.passwordMismatch.val)
-            .font(Font.caption2())
-            .foregroundStyle(Color.labelDestructive)
+    var passwordConfirmTextField: some View {
+        CustomTextField(inputFieldType: .passwordConfirm, inFocus: $inFocus, text: $passwordConfirm, validation: $password)
     }
     
     var signupButton: some View {
@@ -202,7 +103,7 @@ private extension RegisterScreen {
             !lastName.isBlank &&
             email.isValidEmail &&
             password.isValidPassword &&
-            doPasswordsMatch ?? false
+            password == passwordConfirm
     }
 }
 

@@ -11,38 +11,24 @@ struct LoginScreen: View {
     
     @Environment(AuthStore.self) private var authStore
     @Environment(Coordinator.self) private var coordinator
-    
-    @FocusState private var inFocus: InputField?
+    @FocusState private var inFocus: InputFieldType?
     @State private var email: String = ""
     @State private var password: String = ""
-    @State private var isEmailValid: Bool? = nil
-    @State private var isPasswordValid: Bool? = nil
     
     var body: some View {
         VStack(spacing: Spacing.interItem * 2) {
             headerImage
             headerText
-            VStack(spacing: Spacing.interItem / 2) {
-                emailTextView
-                if let isEmailValid {
-                    if !isEmailValid {
-                        emailErrorText
-                    }
-                }
-            }
-            VStack(spacing: Spacing.interItem / 2) {
-                passwordSecureField
-                if let isPasswordValid {
-                    if !isPasswordValid {
-                        passwordErrorText
-                    }
-                }
-            }
+            emailTextField
+            passwordTextField
             logInButton
             Spacer()
         }
         .navigationTitle(Translation.Startup.loginNavTitle.val)
         .padding(Spacing.interItem)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: { inFocus = .email })
+        }
     }
 }
 
@@ -56,50 +42,21 @@ private extension LoginScreen {
         Text(Translation.Startup.loginFormDescription.val)
     }
     
-    var emailTextView: some View {
-        TextField(
-            Translation.General.labelEmail.val,
-            text: $email,
-            onEditingChanged: { isEdting in
-                isEmailValid = isEdting ? nil : email.isValidEmail
-            },
-            onCommit: {
-                isEmailValid = email.isValidEmail
-                inFocus = .password
-            }
-        )
-        .textInputAutocapitalization(.never)
-        .textContentType(.emailAddress)
-        .keyboardType(.emailAddress)
-        .submitLabel(.next)
-        .focused($inFocus, equals: .email)
-    }
-    
-    var emailErrorText: some View {
-        Text(Translation.General.emailValidation.val)
-            .font(Font.caption2())
-            .foregroundStyle(Color.labelDestructive)
-    }
-    
-    var passwordSecureField: some View {
-        SecureField(
-            Translation.General.labelPassword.val,
+    var emailTextField: some View {
+        CustomTextField(
+            inputFieldType: .email,
+            inFocus: $inFocus,
             text: $password,
-            onCommit: {
-                isPasswordValid = password.isValidPassword
-                inFocus = .passwordConfirm
-            }
+            relinquishFocus: .password
         )
-        .textContentType(.none)
-        .disableAutocorrection(true)
-        .submitLabel(.next)
-        .focused($inFocus, equals: .password)
     }
     
-    var passwordErrorText: some View {
-        Text(Translation.General.passwordRequirements.val)
-            .font(Font.caption2())
-            .foregroundStyle(Color.labelDestructive)
+    var passwordTextField: some View {
+        CustomTextField(
+            inputFieldType: .password,
+            inFocus: $inFocus,
+            text: $password
+        )
     }
     
     var logInButton: some View {
