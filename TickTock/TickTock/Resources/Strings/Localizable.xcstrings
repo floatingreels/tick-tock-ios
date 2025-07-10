@@ -270,6 +270,16 @@
         }
       }
     },
+    "general_first_name_validation_message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This field may not be empty"
+          }
+        }
+      }
+    },
     "general_label_email" : {
       "localizations" : {
         "en" : {
@@ -320,6 +330,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Confirm password"
+          }
+        }
+      }
+    },
+    "general_last_name_validation_message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This field may not be empty"
           }
         }
       }

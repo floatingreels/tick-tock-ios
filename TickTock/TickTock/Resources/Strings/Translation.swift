@@ -28,6 +28,8 @@ extension Translation {
         case buttonCreate = "general_button_create"
         case buttonNext = "general_button_next"
         case buttonOk = "general_button_ok"
+        case firstNameValidation = "general_first_name_validation_message"
+        case lastNameValidation = "general_last_name_validation_message"
         case emailValidation = "general_email_validation_message"
         case labelEmail = "general_label_email"
         case labelFirstName = "general_label_name_first"
