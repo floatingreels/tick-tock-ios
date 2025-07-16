@@ -14,6 +14,7 @@ struct LoginScreen: View {
     @FocusState private var inFocus: InputFieldType?
     @State private var email: String = ""
     @State private var password: String = ""
+    private let fieldSequence: [InputFieldType] = [.email, .password]
     
     var body: some View {
         VStack(spacing: Spacing.interItem * 2) {
@@ -43,20 +44,11 @@ private extension LoginScreen {
     }
     
     var emailTextField: some View {
-        CustomTextField(
-            inputFieldType: .email,
-            inFocus: $inFocus,
-            text: $password,
-            relinquishFocus: .password
-        )
+        CustomTextField(inputFieldType: .email, inFocus: $inFocus, text: $password, fieldSequence: fieldSequence)
     }
     
     var passwordTextField: some View {
-        CustomTextField(
-            inputFieldType: .password,
-            inFocus: $inFocus,
-            text: $password
-        )
+        CustomTextField(inputFieldType: .password, inFocus: $inFocus, text: $password, fieldSequence: fieldSequence)
     }
     
     var logInButton: some View {

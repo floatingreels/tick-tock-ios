@@ -11,8 +11,8 @@ struct ClientCreateScreen: View {
     
     @Environment(ClientStore.self) private var clientStore
     @Environment(Coordinator.self) private var coordinator
-    @State private var companyName: String = ""
-    @State private var isClientNameValid: Bool? = nil
+    @FocusState private var inFocus: InputFieldType?
+    @State private var clientName: String = ""
     
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.interItem * 2) {
@@ -33,6 +33,9 @@ struct ClientCreateScreen: View {
         }
         .navigationTitle(Translation.Client.addClientNavTitle.val)
         .padding(Spacing.interItem)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: { inFocus = .clientName })
+        }
     }
 }
 
@@ -47,24 +50,12 @@ private extension ClientCreateScreen {
     }
     
     var clientNameLabel: some View {
-        Text(Translation.Client.clientNameLabel.val).bold()
+        Text(Translation.Client.clientNameLabel.val)
+            .font(Font.title3(weight: .bold))
     }
     
     var clientNameTextView: some View {
-        TextField(
-            Translation.Client.clientNameLabel.val,
-            text: $companyName,
-            onEditingChanged: { isEdting in
-                isClientNameValid = isEdting ? nil : !companyName.isBlank
-            },
-            onCommit: {
-                isClientNameValid = !companyName.isBlank
-            }
-        )
-        .textInputAutocapitalization(.never)
-        .textContentType(.organizationName)
-        .keyboardType(.default)
-        .submitLabel(.done)
+        CustomTextField(inputFieldType: .clientName, inFocus: $inFocus, text: $clientName)
     }
     
     var addClientButton: some View {
@@ -72,11 +63,11 @@ private extension ClientCreateScreen {
             Text(Translation.General.buttonCreate.val)
         }
         .accentColor(.labelLinks)
-        .disabled(!(isClientNameValid ?? false))
+        .disabled(clientName.isBlank)
     }
     
     func didPressAddClient() {
-        clientStore.addClient(companyName: companyName) { error in
+        clientStore.addClient(companyName: clientName) { error in
             if let error {
                 coordinator.presentAlert(error)
             } else {

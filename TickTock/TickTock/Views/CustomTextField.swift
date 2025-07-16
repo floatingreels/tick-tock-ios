@@ -1,5 +1,5 @@
 //
-//  PasswordTextField.swift
+//  CustomTextField.swift
 //  TickTock
 //
 //  Created by David Gunzburg on 09/07/2025.
@@ -11,115 +11,146 @@ enum InputFieldType {
     
     case firstName
     case lastName
+    case clientName
+    case projectName
     case email
     case password
     case passwordConfirm
+    case rate
     
     var label: String {
         switch self {
         case .firstName: Translation.General.labelFirstName.val
         case .lastName: Translation.General.labelLastName.val
+        case .clientName: Translation.Client.clientNameLabel.val
+        case .projectName: Translation.Project.projectNameLabel.val
         case .email: Translation.General.labelEmail.val
         case .password: Translation.General.labelPassword.val
         case .passwordConfirm: Translation.General.labelPasswordConfirm.val
+        case .rate: Translation.Project.projectRateLabel.val
         }
     }
     
     var errorText: String? {
         switch self {
-        case .firstName: return Translation.General.firstNameValidation.val
-        case .lastName: return Translation.General.lastNameValidation.val
-        case .email: return Translation.General.emailValidation.val
-        case .password: return Translation.General.passwordRequirements.val
-        case .passwordConfirm: return Translation.General.passwordMismatch.val
+        case .firstName: Translation.General.firstNameValidation.val
+        case .lastName: Translation.General.lastNameValidation.val
+        case .clientName: Translation.Client.clientNameValidation.val
+        case .projectName: Translation.Project.projectNameValidation.val
+        case .email: Translation.General.emailValidation.val
+        case .password: Translation.General.passwordRequirements.val
+        case .passwordConfirm: Translation.General.passwordMismatch.val
+        case .rate: Translation.Project.projectRateValidation.val
         }
     }
     
     var autoCapitalization: TextInputAutocapitalization {
         switch self {
-        case .firstName, .lastName: return .words
-        case .email, .password, .passwordConfirm: return .never
-        }
-    }
-     
-    var disableAutocorrection: Bool {
-        switch self {
-        case .firstName, .lastName, .email, .password, .passwordConfirm: return true
+        case .firstName, .lastName, .clientName: .words
+        case .projectName: .sentences
+        case .email, .password, .passwordConfirm, .rate: .never
         }
     }
     
-    var textContentType: UITextContentType {
+    var disableAutocorrection: Bool {
         switch self {
-        case .firstName: return .givenName
-        case .lastName: return .familyName
-        case .email: return .emailAddress
-        case .password: return .newPassword
-        case .passwordConfirm: return .password
+        case .firstName, .lastName, .clientName, .projectName: false
+        case .email, .password, .passwordConfirm, .rate: true
+        }
+    }
+    
+    var textContentType: UITextContentType? {
+        switch self {
+        case .firstName: .givenName
+        case .lastName: .familyName
+        case .clientName: .organizationName
+        case .projectName: .name
+        case .email: .emailAddress
+        case .password: .newPassword
+        case .passwordConfirm: .password
+        case .rate: nil
         }
     }
     
     var keyboardType: UIKeyboardType {
         switch self {
-        case .firstName, .lastName: return .default
-        case .email: return .emailAddress
-        case .password, .passwordConfirm: return .default
+        case .firstName, .lastName, .clientName, .projectName: .default
+        case .email: .emailAddress
+        case .password, .passwordConfirm: .default
+        case .rate: .decimalPad
         }
     }
     
     func isInputValid(_ input: String, comparison: String? = nil) -> Bool {
         switch self {
-        case .firstName, .lastName: return input.isBlank == false
-        case .email: return input.isValidEmail
-        case .password: return input.isValidPassword
-        case .passwordConfirm: return input == comparison
+        case .firstName, .lastName, .clientName, .projectName: input.isBlank == false
+        case .email: input.isValidEmail
+        case .password: input.isValidPassword
+        case .passwordConfirm: input == comparison
+        case .rate: input.isValidRate
         }
     }
 }
-
 
 struct CustomTextField: View {
     
     let inputFieldType: InputFieldType
     @FocusState.Binding var inFocus: InputFieldType?
     @Binding var text: String
+    @Binding var value: Double
     @Binding var validation: String
-    var relinquishFocus: InputFieldType? = nil
     @State private var isValid: Bool? = nil
+    private let fieldSequence: [InputFieldType]
+    
+    init(
+        inputFieldType: InputFieldType,
+        inFocus: FocusState<InputFieldType?>.Binding,
+        value: Binding<Double>,
+        fieldSequence: [InputFieldType] = []
+    ) {
+        self.inputFieldType = inputFieldType
+        self._inFocus = inFocus
+        self._text = .constant("")
+        self._value = value
+        self._validation = .constant("")
+        self.fieldSequence = fieldSequence
+    }
     
     init(
         inputFieldType: InputFieldType,
         inFocus: FocusState<InputFieldType?>.Binding,
         text: Binding<String>,
         validation: Binding<String>,
-        relinquishFocus: InputFieldType? = nil
+        fieldSequence: [InputFieldType] = []
     ) {
         self.inputFieldType = inputFieldType
         self._inFocus = inFocus
         self._text = text
+        self._value = .constant(0.0)
         self._validation = validation
-        self.relinquishFocus = relinquishFocus
+        self.fieldSequence = fieldSequence
     }
     
     init(
         inputFieldType: InputFieldType,
         inFocus: FocusState<InputFieldType?>.Binding,
         text: Binding<String>,
-        relinquishFocus: InputFieldType? = nil
+        fieldSequence: [InputFieldType] = []
     ) {
         self.inputFieldType = inputFieldType
         self._inFocus = inFocus
         self._text = text
+        self._value = .constant(0.0)
         self._validation = .constant("")
-        self.relinquishFocus = relinquishFocus
+        self.fieldSequence = fieldSequence
     }
     
     var body: some View {
         VStack(spacing: Spacing.interItem / 2) {
             switch inputFieldType {
-            case .password, .passwordConfirm:
-                secureField
-            default:
-                textField
+            case .password, .passwordConfirm: secureField
+            case .rate: currencyField
+            default: textField
             }
             if let isValid {
                 if !isValid {
@@ -139,41 +170,101 @@ private extension CustomTextField {
             onEditingChanged: { isEdting in
                 isValid = isEdting ? nil : inputFieldType.isInputValid(text)
             },
-            onCommit: {
-                isValid = inputFieldType.isInputValid(text)
-                inFocus = relinquishFocus
-            }
+            onCommit: handleSubmit
         )
         .foregroundStyle(Color.labelSecondary)
         .autocorrectionDisabled(inputFieldType.disableAutocorrection)
         .textInputAutocapitalization(inputFieldType.autoCapitalization)
         .textContentType(inputFieldType.textContentType)
         .keyboardType(inputFieldType.keyboardType)
-        .submitLabel(relinquishFocus != nil ? .next : .done)
+        .submitLabel(isLastField ? .done : .next)
         .focused($inFocus, equals: inputFieldType)
+        .toolbar {
+            if inFocus == inputFieldType {
+                ToolbarItemGroup(placement: .keyboard) {
+                    keyboardToolbar
+                }
+            }
+        }
     }
     
     var secureField: some View {
         SecureField(
-            Translation.General.labelPassword.val,
+            inputFieldType.label,
             text: $text,
-            onCommit: {
-                isValid = inputFieldType.isInputValid(text, comparison: validation.isBlank ? nil : validation)
-                inFocus = relinquishFocus
-            }
+            onCommit: handleSubmit
         )
-        .autocorrectionDisabled(inputFieldType.disableAutocorrection)
         .textInputAutocapitalization(inputFieldType.autoCapitalization)
         .textContentType(inputFieldType.textContentType)
         .keyboardType(inputFieldType.keyboardType)
-        .submitLabel(relinquishFocus != nil ? .next : .done)
+        .submitLabel(isLastField ? .done : .next)
         .focused($inFocus, equals: inputFieldType)
+        .toolbar {
+            if inFocus == inputFieldType {
+                ToolbarItemGroup(placement: .keyboard) {
+                    keyboardToolbar
+                }
+            }
+        }
+    }
+    
+    var currencyField: some View {
+        TextField(
+            inputFieldType.label,
+            value: $value,
+            format: .currency(code: "EUR")
+        )
+        .onSubmit(handleSubmit)
+        .keyboardType(inputFieldType.keyboardType)
+        .submitLabel(isLastField ? .done : .next)
+        .focused($inFocus, equals: inputFieldType)
+        .toolbar {
+            if inFocus == inputFieldType {
+                ToolbarItemGroup(placement: .keyboard) {
+                    keyboardToolbar
+                }
+            }
+        }
+    }
+    
+    var nextField: InputFieldType? {
+        guard let currentIndex = fieldSequence.firstIndex(of: inputFieldType),
+              currentIndex < fieldSequence.count - 1 else {
+            return nil
+        }
+        return fieldSequence[currentIndex + 1]
+    }
+    
+    var isLastField: Bool {
+        nextField == nil
     }
     
     var errorLabel: some View {
         Text(inputFieldType.errorText ?? "")
             .font(Font.caption2())
             .foregroundStyle(Color.labelDestructive)
+    }
+    
+    var keyboardToolbar: some View {
+        let label = isLastField ? Translation.General.buttonDone.val : Translation.General.buttonNext.val
+        return HStack {
+            Spacer()
+            Button(label, action: handleSubmit)
+                .font(.body(weight: .bold))
+                .foregroundStyle(Color.buttonLinks)
+        }
+    }
+    
+    func handleSubmit() {
+        switch inputFieldType {
+        case .passwordConfirm:
+            isValid = inputFieldType.isInputValid(text, comparison: validation.isBlank ? nil : validation)
+        case .rate:
+            isValid = inputFieldType.isInputValid("\(value)")
+        default:
+            isValid = inputFieldType.isInputValid(text)
+        }
+        inFocus = nextField
     }
 }
 

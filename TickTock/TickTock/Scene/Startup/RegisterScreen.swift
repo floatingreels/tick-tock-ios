@@ -17,6 +17,7 @@ struct RegisterScreen: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var passwordConfirm: String = ""
+    private let fieldSequence: [InputFieldType] = [.firstName, .lastName,.email, .password, .passwordConfirm]
     
     var body: some View {
         
@@ -54,23 +55,23 @@ private extension RegisterScreen {
     }
     
     var firstNameTextField: some View {
-        CustomTextField(inputFieldType: .firstName, inFocus: $inFocus, text: $firstName, relinquishFocus: .lastName)
+        CustomTextField(inputFieldType: .firstName, inFocus: $inFocus, text: $firstName, fieldSequence: fieldSequence)
     }
     
     var lastNameTextField: some View {
-        CustomTextField(inputFieldType: .lastName, inFocus: $inFocus, text: $lastName, relinquishFocus: .email)
+        CustomTextField(inputFieldType: .lastName, inFocus: $inFocus, text: $lastName, fieldSequence: fieldSequence)
     }
     
     var emailTextField: some View {
-        CustomTextField(inputFieldType: .email, inFocus: $inFocus, text: $email, relinquishFocus: .password)
+        CustomTextField(inputFieldType: .email, inFocus: $inFocus, text: $email, fieldSequence: fieldSequence)
     }
     
     var passwordTextField: some View {
-        CustomTextField(inputFieldType: .password, inFocus: $inFocus, text: $password, relinquishFocus: .passwordConfirm)
+        CustomTextField(inputFieldType: .password, inFocus: $inFocus, text: $password, fieldSequence: fieldSequence)
     }
     
     var passwordConfirmTextField: some View {
-        CustomTextField(inputFieldType: .passwordConfirm, inFocus: $inFocus, text: $passwordConfirm, validation: $password)
+        CustomTextField(inputFieldType: .passwordConfirm, inFocus: $inFocus, text: $passwordConfirm, validation: $password, fieldSequence: fieldSequence)
     }
     
     var signupButton: some View {

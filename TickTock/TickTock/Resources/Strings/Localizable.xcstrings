@@ -131,6 +131,16 @@
         }
       }
     },
+    "client_name_validation_message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This field may not be empty"
+          }
+        }
+      }
+    },
     "detail_client_button_new_project" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -234,6 +244,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create"
+          }
+        }
+      }
+    },
+    "general_button_done" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
           }
         }
       }
@@ -540,6 +560,16 @@
         }
       }
     },
+    "project_name_validation_message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This field may not be empty"
+          }
+        }
+      }
+    },
     "project_rate_type_day" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -580,6 +610,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "per week"
+          }
+        }
+      }
+    },
+    "project_rate_validation_message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please enter a positive number"
           }
         }
       }

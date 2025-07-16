@@ -12,11 +12,12 @@ struct ProjectCreateScreen: View {
     @Environment(StoreManager.self) private var storeManager
     @Environment(ClientStore.self) private var clientStore
     @Environment(Coordinator.self) private var coordinator
+    @FocusState private var inFocus: InputFieldType?
     @State private var clientId: Int?
     @State private var projectName: String = ""
-    @State private var isProjectNameValid: Bool? = nil
     @State private var rate: Double = 0
     @State private var rateType: RateType = .hour
+    private let fieldSequence: [InputFieldType] = [.projectName, .rate]
     
     var body: some View {
         ScrollView {
@@ -66,6 +67,9 @@ struct ProjectCreateScreen: View {
             .containerRelativeFrame([.horizontal, .vertical], alignment: .topLeading)
         }
         .navigationTitle(Translation.Project.addProjectNavTitle.val)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: { inFocus = .projectName })
+        }
     }
 }
 
@@ -83,7 +87,6 @@ private extension ProjectCreateScreen {
     var clientsLabel: some View {
         var label = Translation.Project.addProjectClientLabel.val
         if clientStore.clients.count == 1 {
-            clientId = clientStore.clients[0].id
             label = "\(label): \(clientStore.clients[0].name)"
         } else if let id = clientId,
            let client = clientStore.clients.first(where: { $0.id == id }) {
@@ -119,20 +122,7 @@ private extension ProjectCreateScreen {
     }
     
     var projectNameTextView: some View {
-        TextField(
-            Translation.Project.projectNameLabel.val,
-            text: $projectName,
-            onEditingChanged: { isEdting in
-                isProjectNameValid = isEdting ? nil : !projectName.isBlank
-            },
-            onCommit: {
-                isProjectNameValid = !projectName.isBlank
-            }
-        )
-        .textInputAutocapitalization(.never)
-        .textContentType(.name)
-        .keyboardType(.default)
-        .submitLabel(.next)
+        CustomTextField(inputFieldType: .projectName, inFocus: $inFocus, text: $projectName, fieldSequence: fieldSequence)
     }
     
     var rateLabel: some View {
@@ -141,12 +131,7 @@ private extension ProjectCreateScreen {
     }
     
     var rateTextView: some View {
-        TextField(
-            Translation.Project.projectRateLabel.val,
-            value: $rate,
-            format: .currency(code: "EUR"))
-        .keyboardType(.decimalPad)
-        .submitLabel(.next)
+        CustomTextField(inputFieldType: .rate, inFocus: $inFocus, value: $rate, fieldSequence: fieldSequence)
     }
     
     var rateTypePicker: some View {
@@ -195,7 +180,9 @@ private extension ProjectCreateScreen {
     }
     
     func isFormValid() -> Bool {
-        isProjectNameValid == true && getClientId() != nil
+        let valid = !projectName.isBlank && rate >= 0.0 && getClientId() != nil
+        print("project name = \(projectName)\nrate = \(rate)\nclientId = \(getClientId())\n\n\n")
+        return valid
     }
 }
 

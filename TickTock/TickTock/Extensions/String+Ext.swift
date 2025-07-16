@@ -24,6 +24,11 @@ extension String {
         return passTest.evaluate(with: self) */
     }
     
+    var isValidRate: Bool {
+        guard let number = Double(self) else { return false }
+        return number >= 0
+    }
+    
     var isBlank: Bool {
         return self.trimmed().isEmpty
     }
