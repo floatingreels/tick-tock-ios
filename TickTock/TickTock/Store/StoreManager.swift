@@ -64,6 +64,26 @@ final class StoreManager {
         }
     }
     
+    func createSession(startDate: Date, endDate: Date, completion: @escaping (CustomAlert?) -> Void) {
+        guard let project = projectStore.project,
+              let clientId = project.clientId
+        else {
+            completion(CustomAlert.generalError())
+            return
+        }
+        requestManager.addSession(clientId: clientId, projectId: project.id, start: startDate, end: endDate) { [weak self] data in
+            guard let self else { return }
+            switch data.result {
+            case .success(_):
+                self.refreshProjects()
+                completion(nil)
+            case .failure(let error):
+                completion(CustomAlert.serviceError(error, code: data.response?.statusCode))
+            }
+            
+        }
+    }
+    
     private func refreshProjects() {
         if let clientId = clientStore.client?.id { // project was added/modified/deleted from Client Detail screen
             self.clientStore.getClientDetail(clientId: clientId, silentFailure: true, completion: { _ in } )
