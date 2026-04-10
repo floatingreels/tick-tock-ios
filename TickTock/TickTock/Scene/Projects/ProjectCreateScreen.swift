@@ -86,7 +86,7 @@ private extension ProjectCreateScreen {
     
     var clientsLabel: some View {
         var label = Translation.Project.addProjectClientLabel.val
-        if clientStore.clients.count == 1 {
+        if isSoleClient() {
             label = "\(label): \(clientStore.clients[0].name)"
         } else if let id = clientId,
            let client = clientStore.clients.first(where: { $0.id == id }) {
@@ -153,6 +153,8 @@ private extension ProjectCreateScreen {
         }
         .accentColor(.labelLinks)
         .disabled(!isFormValid())
+        .onAppear { updateClientId() }
+        .onChange(of: clientStore.clients.count) { _, _ in updateClientId() }
     }
     
     func didPressAddProject() {
@@ -172,6 +174,16 @@ private extension ProjectCreateScreen {
                 let success = GenericSuccessData(message: Translation.Project.addProjectSuccessMessage.val)
                 coordinator.push(.success(success))
             }
+        }
+    }
+    
+    func isSoleClient() -> Bool {
+        return clientStore.clients.count == 1
+    }
+    
+    private func updateClientId() {
+        if isSoleClient() {
+            clientId = clientStore.clients.first?.id
         }
     }
     
