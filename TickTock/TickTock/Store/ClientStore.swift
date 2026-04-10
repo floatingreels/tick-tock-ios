@@ -19,7 +19,10 @@ final class ClientStore {
         self.requestManager = requestManager
     }
     
-    func addClient(companyName: String, completion: @escaping (CustomAlert?) -> Void) {
+    func addClient(
+        companyName: String,
+        completion: @escaping (CustomAlert?) -> Void
+    ) {
         requestManager.addClient(companyName: companyName) { [weak self] data in
             guard let self else { return }
             switch data.result {
@@ -32,7 +35,10 @@ final class ClientStore {
         }
     }
     
-    func getAllClients(silentFailure: Bool = false, completion: @escaping (CustomAlert?) -> Void) {
+    func getAllClients(
+        silentFailure: Bool = false,
+        completion: @escaping (CustomAlert?) -> Void
+    ) {
         requestManager.getClients { [weak self] data in
             guard let self else { return }
             switch data.result {
@@ -45,7 +51,11 @@ final class ClientStore {
         }
     }
     
-    func getClientDetail(clientId: Int, silentFailure: Bool = false, completion: @escaping (CustomAlert?) -> Void) {
+    func getClientDetail(
+        clientId: Int,
+        silentFailure: Bool = false,
+        completion: @escaping (CustomAlert?) -> Void
+    ) {
         requestManager.getClientDetail(clientId: clientId) { [weak self] data in
             guard let self else { return }
             switch data.result {
@@ -58,7 +68,11 @@ final class ClientStore {
         }
     }
     
-    func updateClientDetail(clientId: Int, companyName: String?, completion: @escaping (CustomAlert?) -> Void) {
+    func updateClientDetail(
+        clientId: Int,
+        companyName: String?,
+        completion: @escaping (CustomAlert?) -> Void
+    ) {
         requestManager.updateClientDetail(clientId: clientId, companyName: companyName) { [weak self] data in
             guard let self else { return }
             switch data.result {

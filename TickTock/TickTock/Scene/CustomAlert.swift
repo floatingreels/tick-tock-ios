@@ -8,6 +8,7 @@
 import Alamofire
 
 struct CustomAlert {
+    
     let title: String
     let message: String
     let actions: [AlertAction]

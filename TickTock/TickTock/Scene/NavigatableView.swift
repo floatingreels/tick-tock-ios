@@ -12,7 +12,8 @@ typealias PresentHandler = () -> Void
 
 struct NavigatableView: View {
     
-    @State private var coordinator = Coordinator() 
+    @State
+    private var coordinator = Coordinator()
     private var root: AppScreen
     
     init(root: AppScreen) {

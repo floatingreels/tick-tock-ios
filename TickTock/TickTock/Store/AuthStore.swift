@@ -18,7 +18,13 @@ final class AuthStore {
         self.requestManager = requestManager
     }
     
-    func signUp(firstName: String, lastName: String, email: String, password: String, completion: @escaping @Sendable (AFDataResponse<LoginResponse>) -> Void) {
+    func signUp(
+        firstName: String,
+        lastName: String,
+        email: String,
+        password: String,
+        completion: @escaping @Sendable (AFDataResponse<LoginResponse>) -> Void
+    ) {
         requestManager.performUserRegistration(
             firstName: firstName,
             lastName: lastName,
