@@ -13,14 +13,19 @@ struct GetClientsResponse: Respondable, Codable {
     let clients: [Client]
 }
 
-struct Client: Codable, Selectable, Hashable {
-    
-    static let testClientId = 2
+struct Client: Codable {
     
     let id: Int
     let name: String
     let projects: [Project]?
     let userId: Int
+    
+    init(id: Int, name: String, projects: [Project]?) {
+        self.id = id
+        self.name = name
+        self.projects = projects
+        self.userId = TickTockDefaults.shared.userId
+    }
     
     enum CodingKeys: String, CodingKey {
         case id = "clientId"
@@ -29,7 +34,13 @@ struct Client: Codable, Selectable, Hashable {
         case userId
     }
     
-    static func == (lhs: Client, rhs: Client) -> Bool {
-        lhs.id == rhs.id
+    func toSelectable() -> ClientCellData {
+        ClientCellData(id: id, title: name)
     }
+}
+
+struct ClientCellData: Selectable, Hashable {
+    let id: Int
+    let title: String
+    var subtitle: String? = nil
 }

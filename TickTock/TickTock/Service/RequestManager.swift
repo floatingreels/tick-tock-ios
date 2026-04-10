@@ -80,7 +80,7 @@ final class RequestManager {
         service.execute(request: request, completion: completion)
     }
     
-    func addSession(clientId: Int, projectId: Int, start: Date?, end: Date?, completion: @escaping @Sendable (AFDataResponse<AddSessionResponse>) -> Void) {
+    func addSession(clientId: Int, projectId: Int, start: Date, end: Date, completion: @escaping @Sendable (AFDataResponse<AddSessionResponse>) -> Void) {
         let request = AddSessionRequest(clientId: clientId, projectId: projectId, start: start, end: end)
         service.execute(request: request, completion: completion)
     }
