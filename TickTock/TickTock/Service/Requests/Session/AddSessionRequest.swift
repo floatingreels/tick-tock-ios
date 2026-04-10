@@ -11,20 +11,16 @@ struct AddSessionRequest: Requestable {
     
     let clientId: Int
     let projectId: Int
-    let start: Date?
-    let end: Date?
+    let start: Date
+    let end: Date
     
     var relativeURL: URL? { URL(string: "users/\(TickTockDefaults.shared.userId)/clients/\(clientId)/projects/\(projectId)/sessions") }
     var method: RequestMethod { .post }
     var query: RequestQuery? { nil }
     var body: RequestBody? {
-        var body: [String: Any] = [:]
-        if let start {
-            body["startedAt"] = ISODateFormatter.shared.isoStringFromDate(start)
-        }
-        if let end {
-            body["endedAt"] = ISODateFormatter.shared.isoStringFromDate(end)
-        }
-        return body
+        [
+            "startedAt": DateTimeUtil.shared.isoStringFromDate(start),
+            "endedAt": DateTimeUtil.shared.isoStringFromDate(end)
+        ]
     }
 }
