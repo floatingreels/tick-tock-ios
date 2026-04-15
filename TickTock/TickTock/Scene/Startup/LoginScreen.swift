@@ -44,7 +44,7 @@ private extension LoginScreen {
     }
     
     var emailTextField: some View {
-        CustomTextField(inputFieldType: .email, inFocus: $inFocus, text: $password, fieldSequence: fieldSequence)
+        CustomTextField(inputFieldType: .email, inFocus: $inFocus, text: $email, fieldSequence: fieldSequence)
     }
     
     var passwordTextField: some View {
