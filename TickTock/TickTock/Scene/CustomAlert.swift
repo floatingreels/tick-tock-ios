@@ -5,7 +5,6 @@
 //  Created by David Gunzburg on 10/06/2025.
 //
 
-import Alamofire
 
 struct CustomAlert {
     
@@ -13,21 +12,22 @@ struct CustomAlert {
     let message: String
     let actions: [AlertAction]
     
-    static func serviceError(_ error: AFError, code: Int?) -> CustomAlert {
-        var title = error.failureReason ?? Translation.Error.general_title.val
-        if let code {
+    static func serviceError(_ error: APIErrorResponse) -> CustomAlert {
+        var title = Translation.Error.general_title.val
+        if let code = error.code {
             title += " [\(code)]"
         }
+        
         return CustomAlert(
             title: title,
-            message: error.errorDescription ?? Translation.Error.general_message.val,
+            message: error.message ?? Translation.Error.general_message.val,
             actions: [AlertAction(title: Translation.General.buttonOk.val, completion: {})]
         )
     }
     
     static func generalError() -> CustomAlert {
         CustomAlert(
-            title: Translation.Error.general_message.val,
+            title: Translation.Error.general_title.val,
             message: Translation.Error.general_message.val,
             actions: [AlertAction(title: Translation.General.buttonOk.val, completion: {})]
         )

@@ -15,6 +15,7 @@ struct SessionDetailResponse: Respondable, Codable {
 }
 
 struct Session: Codable {
+    
     let id: Int
     let projectId: Int
     let projectName: String

@@ -11,8 +11,6 @@ final class BackendCredentials {
     
     static let shared = BackendCredentials()
     private let defaults = UserDefaults.standard
-    
-    
     private let accessTokenKey = "accessTokenKey"
     private let refreshTokenKey = "accessTokenKey"
     

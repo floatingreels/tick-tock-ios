@@ -6,6 +6,7 @@
 //
 
 struct LoginResponse: Respondable, Codable {
+    
     let success: Bool
     let message: String?
     let user: User
@@ -13,6 +14,7 @@ struct LoginResponse: Respondable, Codable {
 }
 
 struct User: Codable {
+    
     let id: Int
     let firstName: String
     let lastName: String

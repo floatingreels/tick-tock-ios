@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Alamofire
 
 @Observable
 final class AuthStore {
@@ -23,16 +22,16 @@ final class AuthStore {
         lastName: String,
         email: String,
         password: String,
-        completion: @escaping @Sendable (AFDataResponse<LoginResponse>) -> Void
+        completion: @escaping @Sendable (Result<LoginResponse, APIErrorResponse>) -> Void
     ) {
         requestManager.performUserRegistration(
             firstName: firstName,
             lastName: lastName,
             email: email,
             password: password
-        ) { [weak self] data in
+        ) { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success(let auth):
                 self.isLoggedIn = true
                 BackendCredentials.shared.setAccessToken(auth.token)
@@ -40,17 +39,17 @@ final class AuthStore {
             case .failure(_):
                 self.isLoggedIn = false
             }
-            completion(data)
+            completion(result)
         }
     }
     
-    func logIn(email: String, password: String, completion: @escaping @Sendable (AFDataResponse<LoginResponse>) -> Void) {
+    func logIn(email: String, password: String, completion: @escaping @Sendable (Result<LoginResponse, APIErrorResponse>) -> Void) {
         requestManager.performUserLogin(
             email: email,
             password: password
-        ) { [weak self] data in
+        ) { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success(let auth):
                 self.isLoggedIn = true
                 BackendCredentials.shared.setAccessToken(auth.token)
@@ -58,7 +57,7 @@ final class AuthStore {
             case .failure(_):
                 self.isLoggedIn = false
             }
-            completion(data)
+            completion(result)
         }
     }
     

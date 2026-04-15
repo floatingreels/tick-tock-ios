@@ -61,12 +61,12 @@ private extension LoginScreen {
     }
     
     func logIn() {
-        authStore.logIn(email: email, password: password) { [coordinator] data in
-            switch data.result {
+        authStore.logIn(email: email, password: password) { [coordinator] result in
+            switch result {
             case .success:
                 coordinator.push(.home)
             case .failure(let error):
-                coordinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
+                coordinator.presentAlert(CustomAlert.serviceError(error))
             }
         }
     }

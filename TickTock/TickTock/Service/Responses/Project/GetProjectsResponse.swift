@@ -6,6 +6,7 @@
 //
 
 struct GetProjectsResponse: Respondable, Codable {
+    
     let success: Bool
     let message: String?
     let projects: [Project]
