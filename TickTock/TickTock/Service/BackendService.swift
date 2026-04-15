@@ -22,25 +22,15 @@ final class BackendService {
     
     func execute<T>(
         request: Requestable,
-        completion: @escaping @Sendable (AFDataResponse<T>) -> Void
-    ) where T: Codable, T: Sendable {
+        completion: @escaping @Sendable (Result<T, APIErrorResponse>) -> Void
+    ) where T: Codable, T: Sendable, T: Respondable {
         do {
             guard let request = try buildRequest(request)
             else {
                 logRequestFailure()
                 return
             }
-            AF.request(request)
-                .responseDecodable(of: T.self) { [weak self] data in
-                    guard let self else { return }
-                    switch data.result {
-                    case .success(_):
-                        logResponseSuccess(code: data.response?.statusCode, bodyData: data.data)
-                    case .failure(let error):
-                        logResponseFailure(error, code: data.response?.statusCode, bodyData: data.data)
-                    }
-                    completion(data)
-                }
+            AF.request(request).responseDivergingDecodable(of: T.self, completionHandler: completion)
         } catch {
             logRequestFailure()
         }
@@ -93,11 +83,14 @@ final class BackendService {
     }
     
     private func logRequestFailure() {
-        print("ERROR\nError message: request failed to build")
+        var log = "❌  REQUEST  ❌\n"
+        log += "Request message: request failed to build"
+        log += "\n---------\n"
+        print(log)
     }
     
     private func logRequestSuccess(request: Requestable, url: URL, urlRequest: URLRequest, bodyData: Data? = nil) {
-        var log = "REQUEST\n"
+        var log = "✅  REQUEST  ✅\n"
         log += "Request URL: \(url.absoluteString)\n"
         log += "Request headers:\n"
         if let content = urlRequest.value(forHTTPHeaderField: contentHeaderTuple.0) {
@@ -116,29 +109,7 @@ final class BackendService {
         } else {
             log += "none"
         }
-        print(log)
-    }
-    
-    private func logResponseFailure(_ error: AFError, code: Int?, bodyData: Data? = nil) {
-        var log = "ERROR\n"
-        if let code {
-            log += "Error code: \(code)\n"
-        }
-        if let bodyData, let bodyString = String(data: bodyData, encoding: .utf8)  {
-            log += "Error body: \(bodyString)\n"
-        }
-        log += "Error message: \(error.localizedDescription)"
-        print(log)
-    }
-    
-    private func logResponseSuccess(code: Int?, bodyData: Data?) {
-        var log = "RESPONSE\n"
-        if let code {
-            log += "Response code: \(code)\n"
-        }
-        if let bodyData, let bodyString = String(data: bodyData, encoding: .utf8)  {
-            log += "Response body: \(bodyString)"
-        }
+        log += "\n---------\n"
         print(log)
     }
 }
