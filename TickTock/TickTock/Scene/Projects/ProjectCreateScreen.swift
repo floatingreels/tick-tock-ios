@@ -192,8 +192,9 @@ private extension ProjectCreateScreen {
     }
     
     func isFormValid() -> Bool {
-        let valid = !projectName.isBlank && rate >= 0.0 && getClientId() != nil
-        print("project name = \(projectName)\nrate = \(rate)\nclientId = \(getClientId())\n\n\n")
+        guard let clientId = getClientId() else { return false }
+        let valid = !projectName.isBlank && rate >= 0.0
+        print("project name = \(projectName)\nrate = \(rate)\nclientId = \(clientId)\n\n\n")
         return valid
     }
 }
