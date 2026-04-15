@@ -25,41 +25,41 @@ final class StoreManager {
     }
     
     func addProject(clientId: Int, projectName: String, rate: Double, rateType: RateType, completion: @escaping (CustomAlert?) -> Void) {
-        requestManager.addProject(clientId: clientId, projectName: projectName, rate: rate, rateType: rateType) { [weak self] data in
+        requestManager.addProject(clientId: clientId, projectName: projectName, rate: rate, rateType: rateType) { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success(_):
                 self.refreshProjects()
                 completion(nil)
             case .failure(let error):
-                completion(CustomAlert.serviceError(error, code: data.response?.statusCode))
+                completion(CustomAlert.serviceError(error))
             }
         }
     }
     
     func updateProjectDetail(clientId: Int, projectId: Int, projectName: String?, rate: Double?, rateType: RateType?, status: ProjectStatus?, completion: @escaping (CustomAlert?) -> Void) {
-        requestManager.updateProjectDetail(clientId: clientId, projectId: projectId, projectName: projectName, rate: rate, rateType: rateType, status: status) { [weak self] data in
+        requestManager.updateProjectDetail(clientId: clientId, projectId: projectId, projectName: projectName, rate: rate, rateType: rateType, status: status) { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success(_):
                 self.projectStore.getProjectDetail(projectId: projectId, silentFailure: true, completion: { _ in })
                 refreshProjects()
                 completion(nil)
             case .failure(let error):
-                completion(CustomAlert.serviceError(error, code: data.response?.statusCode))
+                completion(CustomAlert.serviceError(error))
             }
         }
     }
     
     func deleteProject(clientId: Int, projectId: Int, completion: @escaping (CustomAlert?) -> Void) {
-        requestManager.deleteProject(clientId: clientId, projectId: projectId) { [weak self] data in
+        requestManager.deleteProject(clientId: clientId, projectId: projectId) { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success(_):
                 self.refreshProjects()
                 completion(nil)
             case .failure(let error):
-                completion(CustomAlert.serviceError(error, code: data.response?.statusCode))
+                completion(CustomAlert.serviceError(error))
             }
         }
     }
@@ -71,14 +71,14 @@ final class StoreManager {
             completion(CustomAlert.generalError())
             return
         }
-        requestManager.addSession(clientId: clientId, projectId: project.id, start: startDate, end: endDate) { [weak self] data in
+        requestManager.addSession(clientId: clientId, projectId: project.id, start: startDate, end: endDate) { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success(_):
                 self.refreshProjects()
                 completion(nil)
             case .failure(let error):
-                completion(CustomAlert.serviceError(error, code: data.response?.statusCode))
+                completion(CustomAlert.serviceError(error))
             }
             
         }

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Alamofire
 
 @Observable
 final class ClientStore {
@@ -23,14 +22,14 @@ final class ClientStore {
         companyName: String,
         completion: @escaping (CustomAlert?) -> Void
     ) {
-        requestManager.addClient(companyName: companyName) { [weak self] data in
+        requestManager.addClient(companyName: companyName) { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success:
                 getAllClients(completion: { _ in })
                 completion(nil)
             case .failure(let error):
-                completion(CustomAlert.serviceError(error, code: data.response?.statusCode))
+                completion(CustomAlert.serviceError(error))
             }
         }
     }
@@ -39,14 +38,14 @@ final class ClientStore {
         silentFailure: Bool = false,
         completion: @escaping (CustomAlert?) -> Void
     ) {
-        requestManager.getClients { [weak self] data in
+        requestManager.getClients { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success(let response):
                 self.clients = response.clients
                 completion(nil)
             case .failure(let error):
-                completion(silentFailure ? nil : CustomAlert.serviceError(error, code: data.response?.statusCode))
+                completion(silentFailure ? nil : CustomAlert.serviceError(error))
             }
         }
     }
@@ -56,14 +55,14 @@ final class ClientStore {
         silentFailure: Bool = false,
         completion: @escaping (CustomAlert?) -> Void
     ) {
-        requestManager.getClientDetail(clientId: clientId) { [weak self] data in
+        requestManager.getClientDetail(clientId: clientId) { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success(let response):
                 self.client = response.client
                 completion(nil)
             case .failure(let error):
-                completion(silentFailure ? nil : CustomAlert.serviceError(error, code: data.response?.statusCode))
+                completion(silentFailure ? nil : CustomAlert.serviceError(error))
             }
         }
     }
@@ -73,28 +72,28 @@ final class ClientStore {
         companyName: String?,
         completion: @escaping (CustomAlert?) -> Void
     ) {
-        requestManager.updateClientDetail(clientId: clientId, companyName: companyName) { [weak self] data in
+        requestManager.updateClientDetail(clientId: clientId, companyName: companyName) { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success:
                 getClientDetail(clientId: clientId, completion: { _ in })
                 getAllClients(completion: { _ in })
                 completion(nil)
             case .failure(let error):
-                completion(CustomAlert.serviceError(error, code: data.response?.statusCode))
+                completion(CustomAlert.serviceError(error))
             }
         }
     }
     
     func deleteClient(clientId: Int, completion: @escaping (CustomAlert?) -> Void) {
-        requestManager.deleteClient(clientId: clientId) { [weak self] data in
+        requestManager.deleteClient(clientId: clientId) { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success:
                 getAllClients(completion: { _ in })
                 completion(nil)
             case .failure(let error):
-                completion(CustomAlert.serviceError(error, code: data.response?.statusCode))
+                completion(CustomAlert.serviceError(error))
             }
         }
     }

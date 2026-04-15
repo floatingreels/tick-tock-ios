@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Alamofire
 
 @Observable
 final class ProjectStore {
@@ -20,27 +19,27 @@ final class ProjectStore {
     }
     
     func getAllProjects(silentFailure: Bool = false, completion: @escaping (CustomAlert?) -> Void) {
-        requestManager.getProjects(clientId: nil) { [weak self] data in
+        requestManager.getProjects(clientId: nil) { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success(let response):
                 self.projects = response.projects
                 completion(nil)
             case .failure(let error):
-                completion(silentFailure ? nil : CustomAlert.serviceError(error, code: data.response?.statusCode))
+                completion(silentFailure ? nil : CustomAlert.serviceError(error))
             }
         }
     }
     
     func getProjectDetail(projectId: Int, silentFailure: Bool = false, completion: @escaping (CustomAlert?) -> Void) {
-        requestManager.getProjectDetail(projectId: projectId) { [weak self] data in
+        requestManager.getProjectDetail(projectId: projectId) { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success(let response):
                 self.project = response.project
                 completion(nil)
             case .failure(let error):
-                completion(silentFailure ? nil : CustomAlert.serviceError(error, code: data.response?.statusCode))
+                completion(silentFailure ? nil : CustomAlert.serviceError(error))
             }
         }
     }

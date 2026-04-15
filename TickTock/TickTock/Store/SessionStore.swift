@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Alamofire
 
 @Observable
 final class SessionStore {
@@ -20,36 +19,36 @@ final class SessionStore {
     }
     
     func getSessions(clientId: Int, projectId: Int, silentFailure: Bool = false, completion: @escaping (CustomAlert?) -> Void) {
-        requestManager.getSessions(clientId: clientId, projectId: projectId) { [weak self] data in
+        requestManager.getSessions(clientId: clientId, projectId: projectId) { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success(let response):
                 self.sessions = response.sessions
                 completion(nil)
             case .failure(let error):
-                completion(silentFailure ? nil : CustomAlert.serviceError(error, code: data.response?.statusCode))
+                completion(silentFailure ? nil : CustomAlert.serviceError(error))
             }
         }
     }
     
     func getSessionDetail(clientId: Int, projectId: Int, sessionId: Int, silentFailure: Bool = false, completion: @escaping (CustomAlert?) -> Void) {
-        requestManager.getSessionDetail(clientId: clientId, projectId: projectId, sessionId: sessionId) { [weak self] data in
+        requestManager.getSessionDetail(clientId: clientId, projectId: projectId, sessionId: sessionId) { [weak self] result in
             guard let self else { return }
-            switch data.result {
+            switch result {
             case .success(let response):
                 self.session = response.session
                 completion(nil)
             case .failure(let error):
-                completion(silentFailure ? nil : CustomAlert.serviceError(error, code: data.response?.statusCode))
+                completion(silentFailure ? nil : CustomAlert.serviceError(error))
             }
         }
     }
     
-    func updateSessionDetail(clientId: Int, projectId: Int, sessionId: Int, start: Date?, end: Date?, completion: @escaping @Sendable (AFDataResponse<EmptyResponse>) -> Void) {
+    func updateSessionDetail(clientId: Int, projectId: Int, sessionId: Int, start: Date?, end: Date?, completion: @escaping @Sendable (Result<EmptyResponse, APIErrorResponse>) -> Void) {
         requestManager.updateSessionDetail(clientId: clientId, projectId: projectId, sessionId: sessionId, start: start, end: end, completion: completion)
     }
     
-    func deleteSession(clientId: Int, projectId: Int, sessionId: Int, completion: @escaping @Sendable (AFDataResponse<EmptyResponse>) -> Void) {
+    func deleteSession(clientId: Int, projectId: Int, sessionId: Int, completion: @escaping @Sendable (Result<EmptyResponse, APIErrorResponse>) -> Void) {
         requestManager.deleteSession(clientId: clientId, projectId: projectId, sessionId: sessionId, completion: completion)
     }
 }

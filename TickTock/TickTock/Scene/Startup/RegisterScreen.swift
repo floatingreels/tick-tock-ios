@@ -88,12 +88,12 @@ private extension RegisterScreen {
             lastName: lastName,
             email: email,
             password: password
-        ) { [coordinator] data in
-            switch data.result {
+        ) { [coordinator] result in
+            switch result {
             case .success(_):
                 coordinator.push(.home)
             case .failure(let error):
-                coordinator.presentAlert(CustomAlert.serviceError(error, code: data.response?.statusCode))
+                coordinator.presentAlert(CustomAlert.serviceError(error))
             }
         }
     }
