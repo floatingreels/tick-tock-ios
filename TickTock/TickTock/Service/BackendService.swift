@@ -11,8 +11,11 @@ import Alamofire
 final class BackendService {
     
     static let shared = BackendService()
-    
-    private let baseURL: URL? = URL(string: "https://jiypepwmdk.eu-west-1.awsapprunner.com/api")
+//    #if PROD
+//    private let baseURL: URL? = URL(string: "https://jiypepwmdk.eu-west-1.awsapprunner.com/api")
+//    #elseif DEBUG
+    private let baseURL: URL? = URL(string: "http://localhost:3000/api")
+//    #endif DEBUG
     private let authHeaderTuple = ("Authorization", "Bearer")
     private let ajaxHeaderTuple = ("X-Requested-With", "XMLHttpRequest")
     private let contentHeaderTuple = ("Content-Type", "application/json")
